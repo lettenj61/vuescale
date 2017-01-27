@@ -11,7 +11,35 @@ import js.annotation._
 import org.scalajs.dom
 
 @ScalaJSDefined
-abstract class ComponentOptions[V <: Vue] extends Object {
-  var data: Object
-  // TODO: fill things!
+abstract class ComponentOptions[Data] extends Object {
+
+  type V = Vue[Data]
+
+  type LifecycleHook = UndefOr[ThisFunction0[V, Unit]]
+
+  val template: UndefOr[String] = undefined
+  var data: UndefOr[Data] = undefined
+
+  var computed: UndefOr[Dictionary[ThisFunction0[V, _]]] = undefined
+  var methods: UndefOr[Dictionary[ThisFunction1[V, Array[_], _]]] = undefined
+
+  var beforeCreate: LifecycleHook = undefined
+  var created: LifecycleHook = undefined
+  var beforeDestroy: LifecycleHook = undefined
+  var destroyed: LifecycleHook = undefined
+  var beforeMount: LifecycleHook = undefined
+  var mounted: LifecycleHook = undefined
+  var beforeUpdate: LifecycleHook = undefined
+  var updated: LifecycleHook = undefined
+  var activated: LifecycleHook = undefined
+  var deactivated: LifecycleHook = undefined
+
+  var parent: UndefOr[Vue[_]] = undefined
+  // TODO: `mixins`
+  var name: UndefOr[String] = undefined
+  // TODO: `extends`
+  var delimiters: UndefOr[(String, String)] = undefined
 }
+
+@ScalaJSDefined
+abstract class ComponentFunction[D] extends ComponentOptions[js.Function0[D]]

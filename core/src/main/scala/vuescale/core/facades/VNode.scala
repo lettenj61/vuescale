@@ -23,7 +23,7 @@ trait VNode extends Object {
   var elm: dom.Node = native
   var ns: String = native
   var componentOptions: VNodeComponentOptions = native
-  var componentInstance: Vue = native
+  var componentInstance: Vue[_] = native
   var parent: VNode = native
   var raw: Boolean = native
   var isStatic: Boolean = native
@@ -64,7 +64,7 @@ trait VNodeData extends Object {
 @ScalaJSDefined
 trait InlineTemplate extends Object {
   val render: js.Function
-  val staticReaderFns: Array[js.Function]
+  val staticRenderFns: Array[js.Function]
 }
 
 @ScalaJSDefined
