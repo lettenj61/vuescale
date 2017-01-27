@@ -25,4 +25,16 @@ object prelude {
   type VNode = facades.VNode
   type VNodeData = facades.VNodeData
   type VNodeDirective = facades.VNodeDirective
+
+  type ComponentOptions[A] = facades.ComponentOptions[A]
+
+  final def Options[D](_el: String, _data: D): ComponentOptions[D] = new ComponentOptions[D] {
+    el = _el: js.UndefOr[String]
+    data = _data: js.UndefOr[D]
+  }
+
+  final def VueModel[D](el: String, data: D): Vue[D] = {
+    val options = Options(el, data)
+    new Vue(options)
+  }
 }

@@ -17,6 +17,7 @@ abstract class ComponentOptions[Data] extends Object {
 
   type LifecycleHook = UndefOr[ThisFunction0[V, Unit]]
 
+  var el: UndefOr[String] = undefined
   val template: UndefOr[String] = undefined
   var data: UndefOr[Data] = undefined
 

@@ -18,5 +18,12 @@ lazy val core = project
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
-  name := "vuescale-core"
-)
+    name := "vuescale-core"
+  )
+
+lazy val example = project.dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(commonSettings: _*)
+  .settings(
+    name := "vuescale-example"
+  )
