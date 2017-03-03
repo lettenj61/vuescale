@@ -2,7 +2,7 @@
 val libV = "0.1.0-SNAPSHOT"
 val scalaV = "2.11.8"
 
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0")
+crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
 
 val commonSettings = Seq(
   organization := "com.github.lettenj61",

@@ -11,19 +11,27 @@ import js.annotation._
 import org.scalajs.dom
 
 @ScalaJSDefined
-abstract class ComponentOptions[Data] extends Object {
-
-  type V = Vue[Data]
+class ComponentOptions[V <: Vue](
+    val el: UndefOr[dom.html.Element | String] = undefined,
+    val model: Any = undefined
+) extends Object {
 
   type LifecycleHook = UndefOr[ThisFunction0[V, Unit]]
 
-  var el: UndefOr[String] = undefined
+  // -- data options
+  var data: js.Function0[Any] = () => model
+  var props: UndefOr[Any] = undefined // FIXME
+  var propsData: UndefOr[Object] = undefined
+  var computed: UndefOr[Dictionary[ThisFunction0[Vue, _]]] = undefined
+  var methods: UndefOr[Dictionary[ThisFunction1[Vue, Array[_], _]]] = undefined
+
+  // -- dom options
   val template: UndefOr[String] = undefined
-  var data: UndefOr[Data] = undefined
+  // TODO: render
+  // TODO: renderError
+  // TODO: staticRenderFns
 
-  var computed: UndefOr[Dictionary[ThisFunction0[V, _]]] = undefined
-  var methods: UndefOr[Dictionary[ThisFunction1[V, Array[_], _]]] = undefined
-
+  // -- lifecycle hooks
   var beforeCreate: LifecycleHook = undefined
   var created: LifecycleHook = undefined
   var beforeDestroy: LifecycleHook = undefined
@@ -35,7 +43,7 @@ abstract class ComponentOptions[Data] extends Object {
   var activated: LifecycleHook = undefined
   var deactivated: LifecycleHook = undefined
 
-  var parent: UndefOr[Vue[_]] = undefined
+  var parent: UndefOr[Vue] = undefined
   // TODO: `mixins`
   var name: UndefOr[String] = undefined
   // TODO: `extends`
@@ -43,4 +51,42 @@ abstract class ComponentOptions[Data] extends Object {
 }
 
 @ScalaJSDefined
-abstract class ComponentFunction[D] extends ComponentOptions[js.Function0[D]]
+class RenderContext(
+    val props: Any,
+    val children: Array[VNode],
+    val data: VNodeData,
+    val parent: Vue
+  ) extends Object {
+
+  def slots(): Any = undefined
+}
+
+@ScalaJSDefined
+class PropOptions extends Object {
+  val `type`: UndefOr[Any] = undefined // FIXME name and type
+  val required: UndefOr[Boolean] = undefined
+  val default: UndefOr[Any] = undefined
+  val validator: UndefOr[js.Function1[Any, Boolean]] = undefined
+}
+
+@ScalaJSDefined
+trait ComputedOptions[V] extends Object {
+  val get: UndefOr[ThisFunction0[V, Any]] = undefined
+  val set: UndefOr[ThisFunction1[V, Any, Unit]] = undefined
+  val cache: UndefOr[Boolean] = undefined
+}
+
+@ScalaJSDefined
+trait WatchOptions extends Object {
+  val deep: UndefOr[Boolean] = undefined
+  val immediate: UndefOr[Boolean] = undefined
+}
+
+@ScalaJSDefined
+abstract class DirectiveOptions extends Object {
+  var bind: UndefOr[DirectiveFunction] = undefined
+  var inserted: UndefOr[DirectiveFunction] = undefined
+  var update: UndefOr[DirectiveFunction] = undefined
+  var componentUpdated: UndefOr[DirectiveFunction] = undefined
+  var unbind: UndefOr[DirectiveFunction] = undefined
+}

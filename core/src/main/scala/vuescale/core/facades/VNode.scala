@@ -23,7 +23,7 @@ trait VNode extends Object {
   var elm: dom.Node = native
   var ns: String = native
   var componentOptions: VNodeComponentOptions = native
-  var componentInstance: Vue[_] = native
+  var componentInstance: Vue = native
   var parent: VNode = native
   var raw: Boolean = native
   var isStatic: Boolean = native
