@@ -40,27 +40,27 @@ trait VNodeComponentOptions extends Object {
 @native
 trait VNodeData extends Object {
 
-  var key: String | Double = native
-  var slot: String = native
-  var scopedSlots: Dictionary[js.Function1[Any, _]] = native
-  var ref: String = native
-  var tag: String = native
-  var staticClass: String = native
+  var key: UndefOr[String | Double] = native
+  var slot: UndefOr[String] = native
+  var scopedSlots: UndefOr[Dictionary[js.Function1[Any, _]]] = native
+  var ref: UndefOr[String] = native
+  var tag: UndefOr[String] = native
+  var staticClass: UndefOr[String] = native
   @JSName("class")
-  var jsClass: Any = native // FIXME: could there be any good name?
-  var staticStyle: Dictionary[Any] = native
-  var style: Object = native // FIXME: is there any situation that it needs to be an Array?
-  var props: Dictionary[Any] = native
-  var attrs: Dictionary[Any] = native
-  var domProps: Dictionary[Any] = native
-  var hook: Dictionary[js.Function] = native
-  var on: js.Dynamic = native // FIXME: give it a type
-  var nativeOn: js.Dynamic = native // FIXME: give it a type
-  var transition: Object = native
-  var show: Boolean = native
-  var inlineTemplate: InlineTemplate = native
-  var directives: Array[VNodeDirective] = native
-  var keepAlive: Boolean = native
+  var jsClass: UndefOr[Any] = native // FIXME: could there be any good name?
+  var staticStyle: UndefOr[Dictionary[Any]] = native
+  var style: UndefOr[Object] = native // FIXME: is there any situation that it needs to be an Array?
+  var props: UndefOr[Dictionary[Any]] = native
+  var attrs: UndefOr[Dictionary[Any]] = native
+  var domProps: UndefOr[Dictionary[Any]] = native
+  var hook: UndefOr[Dictionary[js.Function]] = native
+  var on: UndefOr[Dictionary[Any]] = native // FIXME: give its values a type
+  var nativeOn: UndefOr[Dictionary[Any]] = native // FIXME: give its values a type
+  var transition: UndefOr[Object] = native
+  var show: UndefOr[Boolean] = native
+  var inlineTemplate: UndefOr[InlineTemplate] = native
+  var directives: UndefOr[Array[VNodeDirective]] = native
+  var keepAlive: UndefOr[Boolean] = native
 }
 
 @ScalaJSDefined
