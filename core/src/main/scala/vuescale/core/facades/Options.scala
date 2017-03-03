@@ -11,25 +11,25 @@ import js.annotation._
 import org.scalajs.dom
 
 @ScalaJSDefined
-class ComponentOptions[V <: Vue](
-    val el: UndefOr[dom.html.Element | String] = undefined,
-    val _model: Any = undefined
-) extends Object {
+abstract class ComponentOptions[V <: Vue] extends Object {
 
   type LifecycleHook = UndefOr[ThisFunction0[V, Unit]]
+  type OptionalFns = UndefOr[Dictionary[js.Function]]
 
   // -- data options
-  var data: js.Function0[Any] = () => _model
+  val data: Any
+
   var props: UndefOr[Any] = undefined // FIXME can give any clearer type?
   var propsData: UndefOr[Object] = undefined
   var computed: UndefOr[Dictionary[ThisFunction0[Vue, _]]] = undefined
   var methods: UndefOr[Dictionary[ThisFunction1[Vue, Array[_], _]]] = undefined
 
   // -- dom options
+  val el: UndefOr[dom.html.Element | String] = undefined
   val template: UndefOr[String] = undefined
-  // TODO: render
-  // TODO: renderError
-  // TODO: staticRenderFns
+  var render: UndefOr[ThisFunction1[V, js.Function, VNode]] = undefined
+  var renderError: UndefOr[js.Function2[CreateElement.Empty, js.Error, VNode]] = undefined
+  var staticRenderFns: UndefOr[Array[js.Function]] = undefined
 
   // -- lifecycle hooks
   var beforeCreate: LifecycleHook = undefined
@@ -42,6 +42,10 @@ class ComponentOptions[V <: Vue](
   var updated: LifecycleHook = undefined
   var activated: LifecycleHook = undefined
   var deactivated: LifecycleHook = undefined
+
+  // -- components
+  val directives: OptionalFns = undefined
+  val components: OptionalFns = undefined
 
   var parent: UndefOr[Vue] = undefined
   // TODO: `mixins`

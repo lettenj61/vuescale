@@ -10,7 +10,7 @@ import js.annotation._
 
 import org.scalajs.dom
 
-// FIXME there are not natives, but interfaces?
+// FIXME they are not natives, but interfaces?
 @native
 trait VNode extends Object {
   var tag: String = native

@@ -5,11 +5,13 @@ import js.annotation._
 
 import vuescale.core.facades._
 
-object Hello extends js.JSApp {
+@JSExport
+object Hello {
 
   @JSExport("Greeting") @JSExportAll
   case class Greeting(message: String)
 
+  @JSExport
   def main(): Unit = {
 
     val model = js.Dictionary(
@@ -17,7 +19,10 @@ object Hello extends js.JSApp {
       "afternoon" -> Greeting("Konnichiwa"),
       "sleep" -> Greeting("Oyasumi")
     )
-    val opts = new ComponentOptions[Vue]("#app", model)
+    val opts = new ComponentOptions[Vue] {
+      override val el = js.defined("#app")
+      override val data = { () => model }
+    }
     val vm: Vue = new Vue(opts)
   }
 }

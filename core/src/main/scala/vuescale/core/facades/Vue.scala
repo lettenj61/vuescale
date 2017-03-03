@@ -6,6 +6,7 @@ package vuescale.core.facades
 import scala.{ Array => _, Any => _ }
 import scala.scalajs.js
 import js._
+import js.annotation.JSBracketAccess
 
 import org.scalajs.dom
 import dom.html.Element
@@ -13,6 +14,11 @@ import dom.html.Element
 // stub
 @native
 class Vue(options: ComponentOptions[Vue]) extends Object {
+
+  @JSBracketAccess
+  def apply(key: String): Any = native
+  @JSBracketAccess
+  def update(key: String, value: Any): Unit = native
 
   val $data: Dynamic = native
   val $el: Element = native
@@ -57,7 +63,7 @@ trait VueStatic extends Object {
 
   val config: VueConfig = native
 
-  def extend(options: ComponentOptions[_]): Vue = native
+  def extend[V <: Vue](options: ComponentOptions[V]): VueConstructor[V] = native
 
   def set[A](`object`: Object, key: String, value: A): A = native
   def set[A](array: Array[A], key: Int, value: A): A = native

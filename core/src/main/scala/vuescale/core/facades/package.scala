@@ -36,9 +36,5 @@ package object facades {
   type PluginFunction[T] = js.Function2[Vue, UndefOr[T], Unit]
 
   type VNodeList = Array[VNode]
-/*
-  type Functions = js.Array[js.Function]
-
-  implicit def function2Functions(f: js.Function): Functions = js.Array(f)
-*/
+  type VueConstructor[V <: Vue] = js.Function1[ComponentOptions[V], V]
 }
