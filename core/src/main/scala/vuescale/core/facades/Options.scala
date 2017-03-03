@@ -13,14 +13,14 @@ import org.scalajs.dom
 @ScalaJSDefined
 class ComponentOptions[V <: Vue](
     val el: UndefOr[dom.html.Element | String] = undefined,
-    val model: Any = undefined
+    val _model: Any = undefined
 ) extends Object {
 
   type LifecycleHook = UndefOr[ThisFunction0[V, Unit]]
 
   // -- data options
-  var data: js.Function0[Any] = () => model
-  var props: UndefOr[Any] = undefined // FIXME
+  var data: js.Function0[Any] = () => _model
+  var props: UndefOr[Any] = undefined // FIXME can give any clearer type?
   var propsData: UndefOr[Object] = undefined
   var computed: UndefOr[Dictionary[ThisFunction0[Vue, _]]] = undefined
   var methods: UndefOr[Dictionary[ThisFunction1[Vue, Array[_], _]]] = undefined
@@ -48,6 +48,14 @@ class ComponentOptions[V <: Vue](
   var name: UndefOr[String] = undefined
   // TODO: `extends`
   var delimiters: UndefOr[(String, String)] = undefined
+}
+
+@ScalaJSDefined
+trait ComponentOptionsFn extends Object {
+  var props: UndefOr[Any] = undefined // FIXME: clearer type
+  val functional: Boolean
+  val render: ThisFunction2[Nothing, js.Function, RenderContext, VNode]
+  val name: UndefOr[String] = undefined
 }
 
 @ScalaJSDefined

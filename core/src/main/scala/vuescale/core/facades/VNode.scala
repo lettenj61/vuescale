@@ -10,10 +10,7 @@ import js.annotation._
 
 import org.scalajs.dom
 
-// FIXME: stub
-@native
-trait ScopedSlot extends Object
-
+// FIXME there are not natives, but interfaces?
 @native
 trait VNode extends Object {
   var tag: String = native
@@ -26,21 +23,26 @@ trait VNode extends Object {
   var componentInstance: Vue = native
   var parent: VNode = native
   var raw: Boolean = native
-  var isStatic: Boolean = native
+  var isStatic: UndefOr[Boolean] = native
   var isRootInsert: Boolean = native
   var isComment: Boolean = native
 }
 
-@native
+@ScalaJSDefined
 trait VNodeComponentOptions extends Object {
-  // FIXME this may be encoded with ScalaJSDefined
+  val Ctor: Vue
+  val propsData: UndefOr[Object] = undefined
+  val listeners: UndefOr[Object] = undefined
+  val children: UndefOr[Any] = undefined // FIXME: give correct type
+  val tag: UndefOr[String] = undefined
 }
 
 @native
 trait VNodeData extends Object {
+
   var key: String | Double = native
   var slot: String = native
-  var scopedSlots: Dictionary[ScopedSlot] = native
+  var scopedSlots: Dictionary[js.Function1[Any, _]] = native
   var ref: String = native
   var tag: String = native
   var staticClass: String = native
