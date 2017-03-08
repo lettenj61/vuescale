@@ -1,7 +1,7 @@
 // Most types are port of Vue.js official type definitions for TypeScript
 // https://github.com/vuejs/vue/tree/dev/types
 
-package vuescale.core.facades
+package vuescale.facades
 
 import scala.{ Array => _, Any => _ }
 import scala.scalajs.js
@@ -86,6 +86,24 @@ trait ComputedOptions[V] extends Object {
   val get: UndefOr[ThisFunction0[V, Any]] = undefined
   val set: UndefOr[ThisFunction1[V, Any, Unit]] = undefined
   val cache: UndefOr[Boolean] = undefined
+}
+
+object ComputedOptions {
+
+  def apply[V](get: UndefOr[ThisFunction0[V, Any]] = undefined,
+              set: UndefOr[ThisFunction1[V, Any, Unit]] = undefined,
+              cache: UndefOr[Boolean] = undefined)
+              : ComputedOptions[V] =
+    applyProxy(get, set, cache)
+
+  private[this] def applyProxy[V](_get: UndefOr[ThisFunction0[V, Any]] = undefined,
+                                  _set: UndefOr[ThisFunction1[V, Any, Unit]] = undefined,
+                                  _cache: UndefOr[Boolean] = undefined)
+                                  : ComputedOptions[V] = new ComputedOptions[V] {
+    override val get = _get
+    override val set = _set
+    override val cache = _cache
+  }
 }
 
 @ScalaJSDefined

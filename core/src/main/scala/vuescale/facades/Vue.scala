@@ -1,7 +1,7 @@
 // Most types are port of Vue.js official type definitions for TypeScript
 // https://github.com/vuejs/vue/tree/dev/types
 
-package vuescale.core.facades
+package vuescale.facades
 
 import scala.{ Array => _, Any => _ }
 import scala.scalajs.js
@@ -17,6 +17,8 @@ class Vue(options: ComponentOptions[Vue]) extends Object {
 
   @JSBracketAccess
   def apply(key: String): Any = native
+  @JSBracketAccess
+  def get[A](key: String): UndefOr[A] = native
   @JSBracketAccess
   def update(key: String, value: Any): Unit = native
 

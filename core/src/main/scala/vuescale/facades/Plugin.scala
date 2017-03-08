@@ -1,7 +1,7 @@
 // Most types are port of Vue.js official type definitions for TypeScript
 // https://github.com/vuejs/vue/tree/dev/types
 
-package vuescale.core.facades
+package vuescale.facades
 
 import scala.{ Array => _, Any => _ }
 import scala.scalajs.js

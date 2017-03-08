@@ -1,4 +1,4 @@
-package vuescale.core
+package vuescale
 
 import scala.{ Array => _, Any => _ }
 import scala.language.implicitConversions
@@ -8,6 +8,8 @@ import js._
 import org.scalajs.dom
 
 package object facades {
+
+  val Vue: VueStatic = js.Dynamic.global.Vue.asInstanceOf[VueStatic]
 
   // implicit def StringVNode(s: String): VNode = s.asInstanceOf[VNode]
   type Constructor = js.Function1[Array[Any], Any]
@@ -36,5 +38,5 @@ package object facades {
   type PluginFunction[T] = js.Function2[Vue, UndefOr[T], Unit]
 
   type VNodeList = Array[VNode]
-  type VueConstructor[V <: Vue] = js.Function1[ComponentOptions[V], V]
+  type VueConstructor[V <: Vue] = js.Function1[UndefOr[ComponentOptions[V]], V]
 }

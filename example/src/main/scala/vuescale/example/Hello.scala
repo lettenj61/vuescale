@@ -3,7 +3,8 @@ package vuescale.example
 import scala.scalajs.js
 import js.annotation._
 
-import vuescale.core.facades._
+import vuescale.facades._
+import vuescale.ext._
 
 @JSExport
 object Hello {
@@ -14,14 +15,15 @@ object Hello {
   @JSExport
   def main(): Unit = {
 
-    val model = js.Dictionary(
-      "morning" -> Greeting("Ohayo"),
-      "afternoon" -> Greeting("Konnichiwa"),
-      "sleep" -> Greeting("Oyasumi")
-    )
     val opts = new ComponentOptions[Vue] {
-      override val el = js.defined("#app")
-      override val data = { () => model }
+      override val el = "#app"
+      val data = { () =>
+        js.Dictionary(
+          "morning" -> Greeting("Ohayo"),
+          "afternoon" -> Greeting("Konnichiwa"),
+          "sleep" -> Greeting("Oyasumi")
+        )
+      }
     }
     val vm: Vue = new Vue(opts)
   }

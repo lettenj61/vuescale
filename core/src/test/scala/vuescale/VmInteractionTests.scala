@@ -1,4 +1,4 @@
-package vuescale.core
+package vuescale
 
 import scala.scalajs.js
 import org.scalajs.dom
@@ -35,5 +35,23 @@ class VmInteractionTests extends FunSuite with Helpers {
     assert(vm.$data.a === vm("a"))
     vm.update("a", -1)
     assert(sample.a === -1)
+  }
+
+  test("Computations") {
+    val x = literal("a" -> 2)
+    val opts = new ComponentOptions[Vue] {
+      val data = x
+      computed = js.defined {
+        js.Dictionary(
+          "kilogram" -> { (vm: Vue) =>
+            (vm.get[Int]("a").getOrElse(0) * 1000).toString() + "kg"
+          }
+        )
+      }
+    }
+    val vm = new Vue(opts)
+    assert(vm("kilogram") === "2000kg")
+    x.a = 8
+    assert(vm("kilogram") === "8000kg")
   }
 }
