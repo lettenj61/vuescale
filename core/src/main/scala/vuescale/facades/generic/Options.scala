@@ -22,13 +22,17 @@ trait ComponentOptions[D, C, M, V] extends Object {
 }
 
 @ScalaJSDefined
-abstract class Accessor[V, A] extends Object {
+class Accessor[V, A](
+  val get: Computed.Getter[V, A],
+  val set: Computed.Setter[V, A]
+) extends Object
 
-  def get(view: V): A
-  def set(view: V, value: A): Unit
+object Accessor {
+  def apply[V, A](get: Computed.Getter[V, A], set: Computed.Setter[V, A])
+                  : Accessor[V, A] = new Accessor(get, set)
+}
 
-  @JSName("get")
-  val getter: ThisFunction0[V, A] = this.get _
-  @JSName("set")
-  val setter: ThisFunction1[V, A, Unit] = this.set _
+object Computed {
+  type Getter[V, A] = ThisFunction0[V, A]
+  type Setter[V, A] = ThisFunction1[V, A, Unit]
 }

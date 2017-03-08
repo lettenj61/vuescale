@@ -21,8 +21,8 @@ abstract class ComponentOptions[V <: Vue] extends Object {
 
   var props: UndefOr[Any] = undefined // FIXME can give any clearer type?
   var propsData: UndefOr[Object] = undefined
-  var computed: UndefOr[Dictionary[ThisFunction0[Vue, _]]] = undefined
-  var methods: UndefOr[Dictionary[ThisFunction1[Vue, Array[_], _]]] = undefined
+  var computed: Any = undefined
+  var methods: UndefOr[Dictionary[Any]] = undefined
 
   // -- dom options
   val el: UndefOr[dom.html.Element | String] = undefined
