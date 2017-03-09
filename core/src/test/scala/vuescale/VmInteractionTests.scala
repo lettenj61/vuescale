@@ -4,21 +4,24 @@ import scala.scalajs.js
 import org.scalajs.dom
 import org.scalatest._
 
-import facades._
+import facades.raw._
+import facades.generic.Computed
 
 /** Basic interactions to Vue.js
   *
   * Ideas are come from:
   * https://github.com/vuejs/vue/tree/dev/test/unit
   */
-class VmInteractionTests extends FunSuite with Helpers {
+class VmInteractionTests extends FunSuite {
   import js.Dynamic.literal
 
   test("Access data through VM proxy") {
-    val vm: Vue = vueWithoutId(
-      "foo" -> "bar",
-      "baz" -> "quux"
-    )
+    val vm: Vue = new Vue(ComponentOptions(
+      data = literal(
+        "foo" -> "bar",
+        "baz" -> "quux"
+      )
+    ))
     assert(vm("foo") === "bar")
     assert(vm("baz") === "quux")
     vm.update("foo", 100)
@@ -27,8 +30,8 @@ class VmInteractionTests extends FunSuite with Helpers {
 
   test("`$data` property") {
     val sample = literal("a" -> 100)
-    val opts = new ComponentOptions[Vue] {
-      val data = sample
+    val opts = new ComponentOptions {
+      override val data = js.defined(() => sample)
     }
     val vm = new Vue(opts)
     assert(vm.$data.a === 100)
@@ -39,16 +42,14 @@ class VmInteractionTests extends FunSuite with Helpers {
 
   test("Computations") {
     val x = literal("a" -> 2)
-    val opts = new ComponentOptions[Vue] {
-      val data = x
-      computed = js.defined {
-        js.Dictionary(
-          "kilogram" -> { (vm: Vue) =>
-            (vm.get[Int]("a").getOrElse(0) * 1000).toString() + "kg"
-          }
-        )
-      }
+    val f: Computed.Getter[Vue, String] = {(vm: Vue) =>
+      val i = (vm.getOrElse("a", 0) * 1000)
+      s"${i}kg"
     }
+    val opts = ComponentOptions(
+      data = x,
+      computed = js.Dictionary("kilogram" -> f)
+    )
     val vm = new Vue(opts)
     assert(vm("kilogram") === "2000kg")
     x.a = 8
