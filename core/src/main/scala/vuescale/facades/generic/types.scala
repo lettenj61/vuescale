@@ -198,7 +198,9 @@ trait VueStatic extends Object {
 
   def directive(id: String, definition: DirectiveOptions): DirectiveOptions = native
   def filter(id: String, definition: js.Function): js.Function = native
-  def component[D, C, V <: Vue[D, C]](id: String, definition: UndefOr[ComponentOptions[D, C]]): VueConstructor[D, C, V] = native
+  def component[D, C, V <: Vue[D, C]](id: String,
+                                      definition: UndefOr[ComponentOptions[D, C]] = undefined)
+                                      : VueConstructor[D, C, V] = native
 
   def use[T](plugin: PluginObject[T] | PluginFunction[T],
             options: UndefOr[T] = undefined): Unit = native

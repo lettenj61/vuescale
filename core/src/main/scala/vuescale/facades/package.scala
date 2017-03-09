@@ -30,4 +30,8 @@ package object facades {
 
   implicit def vueOps[D, C](v: Vue[D, C]): VueOps[D, C] =
     new VueOps(v)
+
+  def ComponentData[A](value: A): UndefOr[js.Function0[A]] = js.defined { () => value }
+  def Bindings[A](bindings: (String, A)*): UndefOr[js.Function0[Dictionary[A]]] =
+    ComponentData(Dictionary(bindings: _*))
 }
