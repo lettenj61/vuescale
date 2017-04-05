@@ -134,7 +134,7 @@ object Computed {
   type Setter[V, A] = ThisFunction1[V, A, Unit]
 }
 
-@native
+@JSGlobal @native
 class Vue[D, C](options: ComponentOptions[D, C]) extends Object {
   import dom.html.Element
 
@@ -210,13 +210,13 @@ trait VueStatic extends Object {
 }
 
 @native
-class Template extends Object {
+trait Template extends Object {
   def render(createElement: js.Function): VNode = native
   var staticRenderFns: Array[js.Function1[Unit, VNode]] = native
 }
 
 @native
-class VueConfig extends Object {
+trait VueConfig extends Object {
   var silent: Boolean = native
   val optionMergeStrategies: Dictionary[js.Function] = native
   var devtools: Boolean = native

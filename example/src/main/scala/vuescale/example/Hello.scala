@@ -5,10 +5,10 @@ import js.annotation._
 
 import vuescale.facades._, raw._
 
-@JSExport
+@JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
-  @JSExport("Greeting") @JSExportAll
+  @JSExportTopLevel("Greeting") @JSExportAll
   case class Greeting(message: String)
 
   @JSExport
