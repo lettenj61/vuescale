@@ -15,7 +15,7 @@ class RenderContext(
   val props: Any,
   val children: Array[VNode],
   val data: VNodeData,
-  val parent: generic.Vue[_, _]
+  val parent: Vue
 ) extends Object {
 
   def slots(): Any = undefined

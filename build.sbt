@@ -11,8 +11,9 @@ val commonSettings = Seq(
 
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-    "org.scalatest" %%% "scalatest" % "3.0.1" % Test
-  )
+    "io.monix" %%% "minitest" % "1.0.1" % Test
+  ),
+  testFrameworks += new TestFramework("minitest.runner.Framework")
 )
 
 lazy val core = project

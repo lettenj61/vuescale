@@ -20,7 +20,7 @@ trait VNode extends Object {
   var elm: dom.Node = native
   var ns: String = native
   var componentOptions: VNodeComponentOptions = native
-  var componentInstance: generic.Vue[_, _] = native
+  var componentInstance: Vue = native
   var parent: VNode = native
   var raw: Boolean = native
   var isStatic: UndefOr[Boolean] = native
@@ -30,7 +30,7 @@ trait VNode extends Object {
 
 @ScalaJSDefined
 trait VNodeComponentOptions extends Object {
-  val Ctor: generic.Vue[_, _]
+  val Ctor: Vue
   val propsData: UndefOr[Object] = undefined
   val listeners: UndefOr[Object] = undefined
   val children: UndefOr[Any] = undefined // FIXME: give correct type
