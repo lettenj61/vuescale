@@ -9,8 +9,6 @@ import org.scalajs.dom
 
 package object facades {
 
-  lazy val Vue: VueStatic = js.Dynamic.global.Vue.asInstanceOf[VueStatic]
-
   type WatchHandler[V, T] = ThisFunction2[V, T, T, Unit]
   type DirectiveFunction = js.Function4[dom.html.Element, VNodeDirective, VNode, VNode, Unit]
 

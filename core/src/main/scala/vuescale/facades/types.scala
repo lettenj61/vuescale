@@ -9,7 +9,7 @@ import js.annotation._
 import org.scalajs.dom
 
 @JSGlobal @native
-class Vue(options: Any) extends Object {
+class Vue(options: scala.Any) extends Object {
   import dom.html.Element
 
   @JSBracketAccess
@@ -91,4 +91,38 @@ trait VueConfig extends Object {
   var devtools: Boolean = native
   var errorHandler: js.Function2[js.Error, _, _] = native // TODO
   var ignoredElements: Array[String] = native
+}
+
+@native
+trait PluginObject[T] extends Object {
+  var install: PluginFunction[T] = native
+
+  @JSBracketAccess
+  def get(key: String): Any = native
+}
+
+@ScalaJSDefined
+class RenderContext(
+  val props: Any,
+  val children: Array[VNode],
+  val data: VNodeData,
+  val parent: Vue
+) extends Object {
+
+  def slots(): Any = undefined
+}
+
+@ScalaJSDefined
+trait WatchOptions extends Object {
+  val deep: UndefOr[Boolean] = undefined
+  val immediate: UndefOr[Boolean] = undefined
+}
+
+@ScalaJSDefined
+trait DirectiveOptions extends Object {
+  var bind: UndefOr[DirectiveFunction] = undefined
+  var inserted: UndefOr[DirectiveFunction] = undefined
+  var update: UndefOr[DirectiveFunction] = undefined
+  var componentUpdated: UndefOr[DirectiveFunction] = undefined
+  var unbind: UndefOr[DirectiveFunction] = undefined
 }
