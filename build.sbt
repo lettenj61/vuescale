@@ -13,17 +13,42 @@ val commonSettings = Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.1",
     "com.lihaoyi" %%% "utest" % "0.4.6" % Test
   ),
-  testFrameworks += new TestFramework("utest.runner.Framework")
+  testFrameworks += new TestFramework("utest.runner.Framework"),
+
+  scalacOptions in Compile ++= Seq(
+    "-deprecation",
+    "-encoding", "UTF-8",
+    "-feature",
+    "-unchecked",
+    "-Xlint",
+    "-Ywarn-dead-code",
+    "-Ywarn-numeric-widen",
+    "-Ywarn-value-discard",
+    "-Ywarn-unused-import",
+    "-Ywarn-unused"
+  )
+)
+
+val domSettings = Seq(
+  requiresDOM := true,
+  jsEnv := PhantomJSEnv().value
 )
 
 lazy val core = project
   .enablePlugins(ScalaJSPlugin)
-  .settings(commonSettings: _*)
+  .settings((commonSettings ++ domSettings): _*)
   .settings(
     name := "vuescale-core",
-    requiresDOM := true,
-    jsEnv := PhantomJSEnv().value,
     jsDependencies += "org.webjars" % "vue" % "2.1.3" / "2.1.3/vue.js" % Test
+  )
+
+lazy val scalatags = project.in(file("scalatags"))
+  .dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+  .settings((commonSettings ++ domSettings): _*)
+  .settings(
+    name := "vuescale-scalatags",
+    libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.5"
   )
 
 lazy val example = project.dependsOn(core)
