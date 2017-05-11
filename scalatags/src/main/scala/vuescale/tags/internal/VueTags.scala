@@ -2,6 +2,7 @@ package vuescale
 package tags
 package internal
 
+import scala.language.dynamics
 import scalatags.generic
 
 /** Builtin Vue.js custom component.
@@ -9,12 +10,14 @@ import scalatags.generic
 trait VueTags[Builder, Output <: FragT, FragT] {
   self: VTagBundle[Builder, Output, FragT] =>
 
-  lazy val component = bundle.all.tag("component")
+  import bundle.all._
+
+  lazy val component = tag("component")
   // Avoid conflict with `transition` style
-  lazy val transitionTag = bundle.all.tag("transition")
-  lazy val transitionGroup = bundle.all.tag("transition-group")
-  lazy val keepAlive = bundle.all.tag("keep-alive")
-  lazy val slot = bundle.all.tag("slot")
+  lazy val transitionTag = tag("transition")
+  lazy val transitionGroup = tag("transition-group")
+  lazy val keepAlive = tag("keep-alive")
+  lazy val slot = tag("slot")
 }
 
 /** Attributes for Vue.js html templates which are aware of
@@ -25,6 +28,7 @@ trait AttrStack[Builder, Output <: FragT, FragT] {
   /** Concrete type of this attribute
     */
   type Repr <: AttrStack[Builder, Output, FragT]
+  type Extender = AttrExtender[Builder, Output, FragT]
 
   def name: String
   def arg: Option[String]
@@ -36,10 +40,14 @@ trait AttrStack[Builder, Output <: FragT, FragT] {
   def append(ss: String*): Repr =
     extend(this.arg, this.modifiers ++ ss)
 
+  /** Dynamically modify its modifiers via [[AttrExtender]]s.
+    */
+  def modify(f: Extender => Extender): AttrStack[Builder, Output, FragT] =
+    f(new AttrExtender(this)).!
+
+  def !(ss: String*): Repr = append(ss: _*)
+
   def toAttr: generic.Attr
-  def void(implicit ev: generic.AttrValue[Builder, String]): generic.AttrPair[Builder, _] = {
-    generic.AttrPair(toAttr, "", ev)
-  }
 
   /** Create new instance of this attribute
     * with preserving exact same type
@@ -47,25 +55,43 @@ trait AttrStack[Builder, Output <: FragT, FragT] {
   def extend: (Option[String], Seq[String]) => Repr
 }
 
+class AttrExtender[Builder, Output <: FragT, FragT](
+  val base: AttrStack[Builder, Output, FragT]
+) extends scala.Dynamic {
+
+  private[this] val buffer = base.modifiers.toBuffer
+
+  def ! = base.extend(base.arg, buffer.toVector)
+
+  def selectDynamic(x: String): this.type = {
+    buffer += x
+    this
+  }
+}
+
+/** Vue.js attributes.
+  */
 trait VueAttrs[Builder, Output <: FragT, FragT] {
   self: VTagBundle[Builder, Output, FragT] =>
 
-  lazy val ref = bundle.all.attr("ref")
-  lazy val slotA = bundle.all.attr("slot")
-  lazy val scope = bundle.all.attr("scope")
-  lazy val mode = bundle.all.attr("mode")
-  lazy val appear = bundle.all.attr("appear")
+  import bundle.all._
+
+  lazy val ref = attr("ref")
+  lazy val slotA = attr("slot")
+  lazy val scope = attr("scope")
+  lazy val mode = attr("mode")
+  lazy val appear = attr("appear")
 
   /* Transition events. */
-  lazy val enterClass = bundle.all.attr("enter-class")
-  lazy val leaveClass = bundle.all.attr("leave-class")
-  lazy val appearClass = bundle.all.attr("appear-class")
-  lazy val enterToClass = bundle.all.attr("enter-to-class")
-  lazy val leaveToClass = bundle.all.attr("leave-to-class")
-  lazy val appearToClass = bundle.all.attr("apear-to-class")
-  lazy val enterActiveClass = bundle.all.attr("enter-active-class")
-  lazy val leaveActiveClass = bundle.all.attr("leave-active-class")
-  lazy val appearActiveClass = bundle.all.attr("appear-active-class")
+  lazy val enterClass = attr("enter-class")
+  lazy val leaveClass = attr("leave-class")
+  lazy val appearClass = attr("appear-class")
+  lazy val enterToClass = attr("enter-to-class")
+  lazy val leaveToClass = attr("leave-to-class")
+  lazy val appearToClass = attr("apear-to-class")
+  lazy val enterActiveClass = attr("enter-active-class")
+  lazy val leaveActiveClass = attr("leave-active-class")
+  lazy val appearActiveClass = attr("appear-active-class")
 }
 
 /** Vue.js directives.
@@ -73,14 +99,21 @@ trait VueAttrs[Builder, Output <: FragT, FragT] {
 trait VueDirectives[Builder, Output <: FragT, FragT] {
   self: VTagBundle[Builder, Output, FragT] =>
 
+  import bundle.all._
+
   lazy val vBind = Binding()
   lazy val vOn = Listener()
-  lazy val vFor = bundle.all.attr("v-for")
-  lazy val vIf = bundle.all.attr("v-if")
-  lazy val vElse = bundle.all.attr("v-else")
-  lazy val vElseIf = bundle.all.attr("v-else-if")
-  lazy val vModel = bundle.all.attr("v-model")
-  lazy val vText = bundle.all.attr("v-text")
+  lazy val vText = attr("v-text")
+  lazy val vHtml = attr("v-html")
+  lazy val vShow = attr("v-show")
+  lazy val vIf = attr("v-if")
+  lazy val vElse = attr("v-else").empty
+  lazy val vElseIf = attr("v-else-if")
+  lazy val vFor = attr("v-for")
+  lazy val vModel = attr("v-model")
+  lazy val vPre = attr("v-pre").empty
+  lazy val vCloak = attr("v-cloak").empty
+  lazy val vOnce = attr("v-once").empty
 
   def directive(baseName: String) = Directive(baseName)
 
@@ -91,10 +124,12 @@ trait VueDirectives[Builder, Output <: FragT, FragT] {
       val argName = arg.map(x => ":" + x).getOrElse("")
       val dot = if (modifiers.isEmpty) "" else "."
       val adds = modifiers.mkString(".")
-      bundle.all.attr(s"${name}${argName}${dot}${adds}")
+      attr(s"${name}${argName}${dot}${adds}")
     }
   }
 
+  /** Attribute builder for custom directives.
+    */
   case class Directive(
     baseName: String,
     arg: Option[String] = None,

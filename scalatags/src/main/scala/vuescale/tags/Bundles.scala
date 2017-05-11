@@ -3,14 +3,19 @@ package vuescale.tags
 import scala.language.implicitConversions
 import scalatags.{ generic, text }
 
+import internal.{ AttrExtender, AttrStack }
+
 /** Utilities shared by tag builder implementations.
   */
 trait VTagBundle[Builder, Output <: FragT, FragT] {
 
-  def bundle: generic.Bundle[Builder, Output, FragT]
+  val bundle: generic.Bundle[Builder, Output, FragT]
 
-  implicit def unwrapAttrStack(
-      attrStack: internal.AttrStack[Builder, Output, FragT]): generic.Attr = attrStack.toAttr
+  implicit def unwrapAttrStack(attrStack: AttrStack[Builder, Output, FragT]): generic.Attr =
+    attrStack.toAttr
+
+  implicit def unwrapExtender(ext: AttrExtender[Builder, Output, FragT]): generic.Attr =
+    ext.base.toAttr
 }
 
 trait VTagAlias[Builder, Output <: FragT, FragT] {
@@ -29,7 +34,7 @@ trait VTagAlias[Builder, Output <: FragT, FragT] {
 object Template extends VTagAlias[text.Builder, String, String] {
 
   trait Provider extends VTagBundle[text.Builder, String, String] {
-    val bundle = scalatags.Text
+    lazy val bundle = scalatags.Text
   }
 
   object bundle
