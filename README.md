@@ -17,7 +17,7 @@ Currently, this snippet from [example sources][example] below is all I can show 
 ```html
 <script type="text/javascript" src="../vuescale-example-fastopt.js"></script>
 <div id="app">
-    <h3>{{ morning.message }}, Vue.js!</h3>
+    <h3>{{ greets.morning }}, Vue.js!</h3>
     <ul>
         <li v-for="treasure in treasures">
             It costs {{treasure}} yen in JPY!
@@ -33,27 +33,29 @@ package vuescale.example
 import scala.scalajs.js
 import js.annotation._
 
-import vuescale.facades._, raw._
+import vuescale.prelude._
 
-@JSExport
+@JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
-  @JSExport("Greeting") @JSExportAll
-  case class Greeting(message: String)
+  @ScalaJSDefined
+  class GreetingPage extends js.Object {
+    val isChecked: Boolean = true
+    val treasures: js.Array[Int] = js.Array(120, 460, 1080, 9600)
+    val greets = js.Dictionary(
+      "morning" -> "Ohayo", "afternoon" -> "Konnichiwa",
+      "night" -> "Konbanwa", "sleep" -> "Oyasumi"
+    )
+  }
 
   @JSExport
   def main(): Unit = {
 
-    val opts = new ComponentOptions {
-      el = "#app"
-      override val data = Bindings[Any](
-        "morning" -> Greeting("Ohayo"),
-        "afternoon" -> Greeting("Konnichiwa"),
-        "sleep" -> Greeting("Oyasumi"),
-        "treasures" -> js.Array(120, 460, 1080, 9600)
-      )
-    }
-    val vm: Vue = new Vue(opts)
+    val opts = new ComponentOptions[Vue, GreetingPage](
+      el = "#app",
+      initData = new GreetingPage
+    )
+    val vm: Vue = new Vue(opts.build())
   }
 }
 ```
