@@ -20,7 +20,7 @@ trait VNode extends Object {
   var elm: dom.Node = native
   var ns: String = native
   var componentOptions: VNodeComponentOptions = native
-  var componentInstance: generic.Vue[_, _] = native
+  var componentInstance: Vue = native
   var parent: VNode = native
   var raw: Boolean = native
   var isStatic: UndefOr[Boolean] = native
@@ -28,13 +28,13 @@ trait VNode extends Object {
   var isComment: Boolean = native
 }
 
-@ScalaJSDefined
+@native
 trait VNodeComponentOptions extends Object {
-  val Ctor: generic.Vue[_, _]
-  val propsData: UndefOr[Object] = undefined
-  val listeners: UndefOr[Object] = undefined
-  val children: UndefOr[Any] = undefined // FIXME: give correct type
-  val tag: UndefOr[String] = undefined
+  val Ctor: Vue = native
+  val propsData: UndefOr[Object] = native
+  val listeners: UndefOr[Object] = native
+  val children: UndefOr[Any] = native // FIXME: give correct type
+  val tag: UndefOr[String] = native
 }
 
 @native
@@ -63,18 +63,18 @@ trait VNodeData extends Object {
   var keepAlive: UndefOr[Boolean] = native
 }
 
-@ScalaJSDefined
+@native
 trait InlineTemplate extends Object {
-  val render: js.Function
-  val staticRenderFns: Array[js.Function]
+  val render: js.Function = native
+  val staticRenderFns: Array[js.Function] = native
 }
 
-@ScalaJSDefined
+@native
 trait VNodeDirective extends Object {
-  val name: String
-  val value: Any
-  val oldValue: Any
-  val expression: Any
-  val arg: String
-  val modifiers: Dictionary[Boolean]
+  val name: String = native
+  val value: Any = native
+  val oldValue: Any = native
+  val expression: Any = native
+  val arg: String = native
+  val modifiers: Dictionary[Boolean] = native
 }

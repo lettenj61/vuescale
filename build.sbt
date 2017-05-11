@@ -1,8 +1,8 @@
 
 val libV = "0.1.0-SNAPSHOT"
-val scalaV = "2.12.1"
+val scalaV = "2.12.2"
 
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
+crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.2")
 
 val commonSettings = Seq(
   organization := "com.github.lettenj61",
@@ -11,18 +11,44 @@ val commonSettings = Seq(
 
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-    "org.scalatest" %%% "scalatest" % "3.0.1" % Test
+    "com.lihaoyi" %%% "utest" % "0.4.6" % Test
+  ),
+  testFrameworks += new TestFramework("utest.runner.Framework"),
+
+  scalacOptions in Compile ++= Seq(
+    "-deprecation",
+    "-encoding", "UTF-8",
+    "-feature",
+    "-unchecked",
+    "-Xlint",
+    "-Ywarn-dead-code",
+    "-Ywarn-numeric-widen",
+    "-Ywarn-value-discard",
+    "-Ywarn-unused-import",
+    "-Ywarn-unused"
   )
+)
+
+val domSettings = Seq(
+  requiresDOM := true,
+  jsEnv := PhantomJSEnv().value
 )
 
 lazy val core = project
   .enablePlugins(ScalaJSPlugin)
-  .settings(commonSettings: _*)
+  .settings((commonSettings ++ domSettings): _*)
   .settings(
     name := "vuescale-core",
-    requiresDOM := true,
-    jsEnv := PhantomJSEnv().value,
     jsDependencies += "org.webjars" % "vue" % "2.1.3" / "2.1.3/vue.js" % Test
+  )
+
+lazy val scalatags = project.in(file("scalatags"))
+  .dependsOn(core)
+  .enablePlugins(ScalaJSPlugin)
+  .settings((commonSettings ++ domSettings): _*)
+  .settings(
+    name := "vuescale-scalatags",
+    libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.5"
   )
 
 lazy val example = project.dependsOn(core)
