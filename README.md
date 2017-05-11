@@ -17,7 +17,7 @@ Currently, this snippet from [example sources][example] below is all I can show 
 ```html
 <script type="text/javascript" src="../vuescale-example-fastopt.js"></script>
 <div id="app">
-    <h3>{{ morning.message }}, Vue.js!</h3>
+    <h3>{{ greets.morning }}, Vue.js!</h3>
     <ul>
         <li v-for="treasure in treasures">
             It costs {{treasure}} yen in JPY!
