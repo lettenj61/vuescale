@@ -1,19 +1,24 @@
 package vuescale.tags
 
 import scala.language.implicitConversions
-import scalatags.{ generic, text, Text }
+import scalatags.{ generic, text }
 
 /** Utilities shared by tag builder implementations.
   */
 trait VTagBundle[Builder, Output <: FragT, FragT] {
 
-  implicit def unwrapAttrStack(
-      attrStack: AttrStack[Builder, Output, FragT]): generic.Attr = attrStack.toAttr
+  def bundle: generic.Bundle[Builder, Output, FragT]
 
-  protected[this] def createAttr(
-      name: String, raw: Boolean = true): generic.Attr
-  protected[this] def createTag(
-      s: String, void: Boolean = false): generic.TypedTag[Builder, Output, FragT]
+  implicit def unwrapAttrStack(
+      attrStack: internal.AttrStack[Builder, Output, FragT]): generic.Attr = attrStack.toAttr
+}
+
+trait VTagAlias[Builder, Output <: FragT, FragT] {
+
+  type VueAttrs = internal.VueAttrs[Builder, Output, FragT]
+  type VueDirectives = internal.VueDirectives[Builder, Output, FragT]
+  type VueTags = internal.VueTags[Builder, Output, FragT]
+  
 }
 
 /** Provide Vue.js custom tags & directives for
@@ -21,25 +26,20 @@ trait VTagBundle[Builder, Output <: FragT, FragT] {
   *
   * This module likely be used when building inline template with strings.
   */
-object Template {
+object Template extends VTagAlias[text.Builder, String, String] {
 
   trait Provider extends VTagBundle[text.Builder, String, String] {
-
-    protected[this] def createAttr(name: String, raw: Boolean = true) =
-      Text.all.attr(name, raw = raw)
-
-    protected[this] def createTag(s: String, void: Boolean = false) =
-      Text.all.tag(s, void)
+    val bundle = scalatags.Text
   }
 
   object bundle
     extends Provider
-    with VueTags[text.Builder, String, String]
-    with VueDirectives[text.Builder, String, String]
-    with VueAttrs[text.Builder, String, String]
+    with VueAttrs
+    with VueDirectives
+    with VueTags
 
   object vueDirectives
     extends Provider
-    with VueDirectives[text.Builder, String, String]
-    with VueAttrs[text.Builder, String, String]
+    with VueAttrs
+    with VueDirectives
 }

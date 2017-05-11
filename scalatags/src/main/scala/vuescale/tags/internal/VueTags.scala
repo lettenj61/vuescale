@@ -1,4 +1,6 @@
-package vuescale.tags
+package vuescale
+package tags
+package internal
 
 import scalatags.generic
 
@@ -7,12 +9,12 @@ import scalatags.generic
 trait VueTags[Builder, Output <: FragT, FragT] {
   self: VTagBundle[Builder, Output, FragT] =>
 
-  lazy val component = createTag("component")
+  lazy val component = bundle.all.tag("component")
   // Avoid conflict with `transition` style
-  lazy val transitionTag = createTag("transition")
-  lazy val transitionGroup = createTag("transition-group")
-  lazy val keepAlive = createTag("keep-alive")
-  lazy val slot = createTag("slot")
+  lazy val transitionTag = bundle.all.tag("transition")
+  lazy val transitionGroup = bundle.all.tag("transition-group")
+  lazy val keepAlive = bundle.all.tag("keep-alive")
+  lazy val slot = bundle.all.tag("slot")
 }
 
 /** Attributes for Vue.js html templates which are aware of
@@ -48,22 +50,22 @@ trait AttrStack[Builder, Output <: FragT, FragT] {
 trait VueAttrs[Builder, Output <: FragT, FragT] {
   self: VTagBundle[Builder, Output, FragT] =>
 
-  lazy val ref = createAttr("ref")
-  lazy val slotA = createAttr("slot")
-  lazy val scope = createAttr("scope")
-  lazy val mode = createAttr("mode")
-  lazy val appear = createAttr("appear")
+  lazy val ref = bundle.all.attr("ref")
+  lazy val slotA = bundle.all.attr("slot")
+  lazy val scope = bundle.all.attr("scope")
+  lazy val mode = bundle.all.attr("mode")
+  lazy val appear = bundle.all.attr("appear")
 
   /* Transition events. */
-  lazy val enterClass = createAttr("enter-class")
-  lazy val leaveClass = createAttr("leave-class")
-  lazy val appearClass = createAttr("appear-class")
-  lazy val enterToClass = createAttr("enter-to-class")
-  lazy val leaveToClass = createAttr("leave-to-class")
-  lazy val appearToClass = createAttr("apear-to-class")
-  lazy val enterActiveClass = createAttr("enter-active-class")
-  lazy val leaveActiveClass = createAttr("leave-active-class")
-  lazy val appearActiveClass = createAttr("appear-active-class")
+  lazy val enterClass = bundle.all.attr("enter-class")
+  lazy val leaveClass = bundle.all.attr("leave-class")
+  lazy val appearClass = bundle.all.attr("appear-class")
+  lazy val enterToClass = bundle.all.attr("enter-to-class")
+  lazy val leaveToClass = bundle.all.attr("leave-to-class")
+  lazy val appearToClass = bundle.all.attr("apear-to-class")
+  lazy val enterActiveClass = bundle.all.attr("enter-active-class")
+  lazy val leaveActiveClass = bundle.all.attr("leave-active-class")
+  lazy val appearActiveClass = bundle.all.attr("appear-active-class")
 }
 
 /** Vue.js directives.
@@ -73,12 +75,12 @@ trait VueDirectives[Builder, Output <: FragT, FragT] {
 
   lazy val vBind = Binding()
   lazy val vOn = Listener()
-  lazy val vFor = createAttr("v-for")
-  lazy val vIf = createAttr("v-if")
-  lazy val vElse = createAttr("v-else")
-  lazy val vElseIf = createAttr("v-else-if")
-  lazy val vModel = createAttr("v-model")
-  lazy val vText = createAttr("v-text")
+  lazy val vFor = bundle.all.attr("v-for")
+  lazy val vIf = bundle.all.attr("v-if")
+  lazy val vElse = bundle.all.attr("v-else")
+  lazy val vElseIf = bundle.all.attr("v-else-if")
+  lazy val vModel = bundle.all.attr("v-model")
+  lazy val vText = bundle.all.attr("v-text")
 
   def directive(baseName: String) = Directive(baseName)
 
@@ -89,7 +91,7 @@ trait VueDirectives[Builder, Output <: FragT, FragT] {
       val argName = arg.map(x => ":" + x).getOrElse("")
       val dot = if (modifiers.isEmpty) "" else "."
       val adds = modifiers.mkString(".")
-      self.createAttr(s"${name}${argName}${dot}${adds}")
+      bundle.all.attr(s"${name}${argName}${dot}${adds}")
     }
   }
 
