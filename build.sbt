@@ -21,11 +21,8 @@ val commonSettings = Seq(
     "-feature",
     "-unchecked",
     "-Xlint",
-    "-Ywarn-dead-code",
     "-Ywarn-numeric-widen",
-    "-Ywarn-value-discard",
-    "-Ywarn-unused-import",
-    "-Ywarn-unused"
+    "-Ywarn-value-discard"
   )
 )
 

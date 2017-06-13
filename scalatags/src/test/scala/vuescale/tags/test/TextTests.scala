@@ -5,7 +5,7 @@ import utest._
 
 object TextTests extends TestSuite {
 
-  import Template.bundle._
+  import Template.all._
   import Text.all._
 
   val tests = this {

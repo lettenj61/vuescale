@@ -9,7 +9,7 @@ import vuescale.facades._
 
 object prelude {
 
-  type ComponentOptions[V <: Vue, I] = dsl.ComponentOptions[V, I]
+  type ComponentBuilder[I] = ext.ComponentBuilder[Vue, I]
 
   type Vue = facades.Vue
   lazy val Vue: VueStatic = js.Dynamic.global.Vue.asInstanceOf[VueStatic]

@@ -37,7 +37,7 @@ object Template extends VTagAlias[text.Builder, String, String] {
     lazy val bundle = scalatags.Text
   }
 
-  object bundle
+  object all
     extends Provider
     with VueAttrs
     with VueDirectives

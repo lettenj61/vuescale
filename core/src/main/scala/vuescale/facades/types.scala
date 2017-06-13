@@ -9,7 +9,7 @@ import js.annotation._
 import org.scalajs.dom
 
 @JSGlobal @native
-class Vue(options: scala.Any) extends Object {
+class Vue(options: Any) extends Object {
   import dom.html.Element
 
   @JSBracketAccess
