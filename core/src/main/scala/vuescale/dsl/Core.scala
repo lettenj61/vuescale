@@ -1,4 +1,5 @@
-package vuescale.ext
+package vuescale
+package dsl
 
 import scala.scalajs.js
 import js.Dynamic.literal
