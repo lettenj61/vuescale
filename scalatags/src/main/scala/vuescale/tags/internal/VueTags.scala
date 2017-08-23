@@ -12,6 +12,7 @@ trait VueTags[Builder, Output <: FragT, FragT] {
 
   import bundle.all._
 
+  lazy val template = tag("template")
   lazy val component = tag("component")
   // Avoid conflict with `transition` style
   lazy val transitionTag = tag("transition")

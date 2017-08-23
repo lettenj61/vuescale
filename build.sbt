@@ -1,8 +1,8 @@
 
 val libV = "0.1.0-SNAPSHOT"
-val scalaV = "2.12.2"
+val scalaV = "2.12.3"
 
-crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.2")
+crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.3")
 
 val commonSettings = Seq(
   organization := "com.github.lettenj61",
@@ -53,4 +53,12 @@ lazy val example = project.dependsOn(core)
   .settings(commonSettings: _*)
   .settings(
     name := "vuescale-example"
+  )
+
+lazy val exampleTags = project.in(file("example-tags"))
+  .dependsOn(core, scalatags)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(commonSettings: _*)
+  .settings(
+    name := "vuescale-tags-example"
   )

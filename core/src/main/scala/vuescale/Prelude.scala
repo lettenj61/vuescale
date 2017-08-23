@@ -1,17 +1,19 @@
 package vuescale
 
-import scala.{ Any => _, Array => _ }
-
 import scala.scalajs.js
-import js.annotation._
 
-import vuescale.facades._
+import vuescale.facade._
+import vuescale.scaladsl
 
 object prelude {
 
-  type ComponentBuilder[I] = dsl.ComponentBuilder[Vue, I]
-
-  type Vue = facades.Vue
+  type Vue = facade.Vue
   lazy val Vue: VueStatic = js.Dynamic.global.Vue.asInstanceOf[VueStatic]
+
+  type VueModel = scaladsl.VueModel
+  object VueModel extends scaladsl.VueModel
+
+  type ComponentOptions[A] = scaladsl.ComponentOptions[A]
+  val ComponentOptions = scaladsl.ComponentOptions
 }
 

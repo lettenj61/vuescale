@@ -4,16 +4,18 @@ import scala.scalajs.js
 import js.Dynamic.literal
 import js.annotation._
 
+import org.scalajs.dom
+
 import vuescale.prelude._
 
 @JSExportAll
 case class Treasure(name: String, price: Int)
 
-@JSExportTopLevel("vuescale.example.Hello")
-object Hello {
+@JSExportTopLevel("vuescale.example.HelloTags")
+object HelloTags {
 
   @JSExport
-  var vm: Vue = null
+  var vm: js.UndefOr[Vue] = js.undefined
 
   @ScalaJSDefined
   class GreetingPage extends js.Object {
@@ -28,6 +30,7 @@ object Hello {
 
   @JSExport
   def main(): Unit = {
+    dom.document.getElementById("wrapper").appendChild(Components.Home.render)
     vm = VueModel.withData(
       el = "#app",
       data = new GreetingPage
