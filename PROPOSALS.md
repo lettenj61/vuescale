@@ -133,7 +133,25 @@ new Vue(Component[TodoListView](
 ))
 ```
 
-Here type `Callback` in `methods` object is merely type alias for `js.ThisFunction0[TodoListView, Unit]`. It is required because we have to tell Scala.js compiler to bind `this` context of our component option correctly. `Callback` is internal abstract type member of `Handler[V]`, so we initialize the handler as annonymous class.
+Here type `Callback` in `methods` object is merely type alias for `js.ThisFunction0[TodoListView, Unit]`. It is required because we have to tell Scala.js compiler to bind `this` context of our component option correctly. `Callback` is internal abstract type member of `Handler[V]`.
+
+If you need access to Vue instance, declare the **ideal** type for your Component by extending `Vue`.
+
+```scala
+@js.native
+trait TodoListView extends Vue with TodoList {
+  def addTodo(): Unit
+  def removeTodo(): Unit
+}
+
+// the handler
+val todoMethods = new Handler[TodoListView] {
+  val addTodo: Callback = { vm: TodoListView => 
+    // We can use Vue instance here
+    vm.$emit("newTodo")
+  }
+}
+```
 
 **Can we?**
 

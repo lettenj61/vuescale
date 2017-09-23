@@ -1,8 +1,7 @@
 package vuescale.example
 
 import scala.scalajs.js
-import js.Dynamic.literal
-import js.annotation._
+import scala.scalajs.js.annotation._
 
 import vuescale.prelude._
 
@@ -12,11 +11,8 @@ case class Treasure(name: String, price: Int)
 @JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
-  @JSExport
-  var vm: Vue = null
-
   @ScalaJSDefined
-  class GreetingPage extends js.Object {
+  class Example extends js.Object {
     val greet = "Hello, Vue.js"
     val treasures: js.Array[Treasure] = js.Array(
       Treasure("Gold piece", 799),
@@ -26,11 +22,18 @@ object Hello {
     )
   }
 
+  type ExampleView = Vue with Example 
+
   @JSExport
   def main(): Unit = {
-    vm = VueModel.withData(
+    val vm: Vue = new Vue(Component[ExampleView](
       el = "#app",
-      data = new GreetingPage
-    )
+      data = new Example,
+      computed = new Handler[ExampleView] {
+        val sumOfTreasures: Callback0[Int] = { (vm: ExampleView) =>
+          vm.treasures.map(_.price).sum
+        }
+      }
+    ))
   }
 }

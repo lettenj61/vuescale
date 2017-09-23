@@ -10,7 +10,7 @@ val commonSettings = Seq(
   scalaVersion := scalaV,
 
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.1",
+    "org.scala-js" %%% "scalajs-dom" % "0.9.3",
     "com.lihaoyi" %%% "utest" % "0.4.6" % Test
   ),
   testFrameworks += new TestFramework("utest.runner.Framework"),
@@ -45,7 +45,7 @@ lazy val scalatags = project.in(file("scalatags"))
   .settings((commonSettings ++ domSettings): _*)
   .settings(
     name := "vuescale-scalatags",
-    libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.5"
+    libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.7"
   )
 
 lazy val example = project.dependsOn(core)
