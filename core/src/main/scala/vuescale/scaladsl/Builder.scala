@@ -2,22 +2,59 @@ package vuescale
 package scaladsl
 
 import scala.scalajs.js
-import js.|
+import scala.scalajs.js.|
+import scala.scalajs.js.Dynamic.literal
 
 import org.scalajs.dom
 
-/**
- * Base trait for component builders.
+/** Helper class to build components in type safe way.
  */
-trait Builder {
-  def el: Builder.Elem
+class Builder[V] private[scaladsl] (
+  private var inner: js.Dictionary[js.Any] = js.Dictionary()
+) {
+
+  private[scaladsl] def this(name: String) = this {
+    js.Dictionary[js.Any]("name" -> name)
+  }
+
+  private[this] def update(key: String, value: js.Any): this.type = {
+    inner(key) = value; this
+  }
+
+  def result: Component[V] = inner.asInstanceOf[Component[V]]
+
+  def el(selector: String): this.type =
+    update("el", selector)
+
+  def template(string: String): this.type =
+    update("template", string)
+
+  def data(initData: js.Object): this.type =
+    update("data", { () => initData })
+
+  def data(fields: (String, js.Any)*): this.type =
+    update("data", { () =>
+      js.Dictionary(fields: _*)
+    })
+
+  def props(propNames: js.Array[String]): this.type =
+    update("props", propNames)
+
+  def propsData(data: js.Object): this.type =
+    update("propsData", data)
+
+  def computed(handler: Handler[_]): this.type =
+    update("computed", handler)
+
+  def methods(handler: Handler[_]): this.type =
+    update("methods", handler)
+
+  def name(componentName: String): this.type =
+    update("name", componentName)
 }
 
 object Builder {
-  type Elem = String | dom.Element
-}
 
-/**
- * Builder at the state which only data type is specified.
- */
-class WithData[D](val el: Builder.Elem, val initData: D) extends Builder
+  implicit def dictionaryIsObject(dict: js.Dictionary[_]): js.Object =
+    dict.asInstanceOf[js.Object]
+}

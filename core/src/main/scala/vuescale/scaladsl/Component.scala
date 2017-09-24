@@ -47,7 +47,7 @@ trait AssetOptions extends js.Object {
   // TODO more clear type
   def directives: js.UndefOr[js.Object] = js.undefined
   def filters: js.UndefOr[js.Object] = js.undefined
-  def components: js.UndefOr[js.Object] = js.undefined
+  def components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
 }
 
 @ScalaJSDefined
@@ -81,9 +81,10 @@ object Component {
     props: js.UndefOr[js.Object] = js.undefined,
     computed: js.UndefOr[Handler[_]] = js.undefined,
     methods: js.UndefOr[Handler[_]] = js.undefined,
-    template: js.UndefOr[String] = js.undefined
+    template: js.UndefOr[String] = js.undefined,
+    components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
   ): Component[Vue] =
-    applyInternal[Vue](el, data, props, computed, methods, template)
+    applyInternal[Vue](el, data, props, computed, methods, template, components)
 
   // TODO support all options
   private def applyInternal[V <: Vue](
@@ -92,7 +93,8 @@ object Component {
     _props: js.UndefOr[js.Object],
     _computed: js.UndefOr[Handler[_]],
     _methods: js.UndefOr[Handler[_]],
-    _template: js.UndefOr[String]
+    _template: js.UndefOr[String],
+    _components: js.UndefOr[js.Dictionary[js.Any]]
   ): Component[V] = new Component[V] {
     override val el = _el
     override val data = _data.map(x => { () => x })
@@ -100,5 +102,8 @@ object Component {
     override val computed = _computed
     override val methods = _methods
     override val template = _template
+    override val components = _components
   }
+
+  def builder[V <: Vue](name: String): Builder[V] = new Builder[V](name)
 }

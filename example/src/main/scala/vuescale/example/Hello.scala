@@ -24,6 +24,11 @@ object Hello {
 
   type TodoListView = Vue with TodoList
 
+  val TodoFooter = Component.builder("todo-footer")
+    .template("<p>{{ message }}</p>")
+    .data("message" -> "Enter your todos", "dummy" -> js.Array[Int]())
+    .result
+
   @JSExport
   def main(): Unit = {
     val vm: Vue = new Vue(Component(
@@ -41,6 +46,9 @@ object Hello {
         def checkTodo(todo: Todo): Unit = {
           todo.done = !todo.done
         }
+      },
+      components = js.defined {
+        js.Dictionary("todo-footer" -> TodoFooter)
       }
     ))
   }
