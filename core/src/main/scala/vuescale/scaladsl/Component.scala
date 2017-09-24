@@ -7,18 +7,18 @@ import scala.scalajs.js.annotation._
 import vuescale.facade.Vue
 
 @ScalaJSDefined
-trait DataOptions[V <: Vue] extends js.Object {
+trait DataOptions[V] extends js.Object {
   def data: js.UndefOr[js.Function0[js.Object]] = js.undefined
   def props: js.UndefOr[js.Object] = js.undefined
   def propsData: js.UndefOr[js.Object] = js.undefined
-  def computed: js.UndefOr[Handler[V]] = js.undefined
-  def methods: js.UndefOr[Handler[V]] = js.undefined
+  def computed: js.UndefOr[Handler[_]] = js.undefined
+  def methods: js.UndefOr[Handler[_]] = js.undefined
   // TODO more stong type
   def watch: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
 }
 
 @ScalaJSDefined
-trait DomOptions[V <: Vue] extends js.Object {
+trait DomOptions extends js.Object {
   def el: js.UndefOr[String] = js.undefined
   def template: js.UndefOr[String] = js.undefined
   // TODO more strong type
@@ -27,7 +27,7 @@ trait DomOptions[V <: Vue] extends js.Object {
 }
 
 @ScalaJSDefined
-trait LifecycleOptions[V <: Vue] extends js.Object {
+trait LifecycleOptions[V] extends js.Object {
   type LifecycleHook = js.ThisFunction0[V, Unit]
 
   def beforeCreate: js.UndefOr[LifecycleHook] = js.undefined
@@ -43,7 +43,7 @@ trait LifecycleOptions[V <: Vue] extends js.Object {
 }
 
 @ScalaJSDefined
-trait AssetOptions[V <: Vue] extends js.Object {
+trait AssetOptions extends js.Object {
   // TODO more clear type
   def directives: js.UndefOr[js.Object] = js.undefined
   def filters: js.UndefOr[js.Object] = js.undefined
@@ -51,7 +51,7 @@ trait AssetOptions[V <: Vue] extends js.Object {
 }
 
 @ScalaJSDefined
-trait CompositionOptions[V <: Vue] extends js.Object {
+trait CompositionOptions extends js.Object {
   def parent: js.UndefOr[Vue] = js.undefined
   // TODO give clear type
   def mixins: js.UndefOr[js.Array[js.Object]] = js.undefined
@@ -60,12 +60,12 @@ trait CompositionOptions[V <: Vue] extends js.Object {
 }
 
 @ScalaJSDefined
-trait Component[V <: Vue]
+trait Component[V]
     extends DataOptions[V]
-       with DomOptions[V]
+       with DomOptions
        with LifecycleOptions[V]
-       with AssetOptions[V]
-       with CompositionOptions[V]
+       with AssetOptions
+       with CompositionOptions
 {
   def name: js.UndefOr[String] = js.undefined
   def functional: js.UndefOr[Boolean] = js.undefined
@@ -75,23 +75,23 @@ trait Component[V <: Vue]
 
 object Component {
 
-  def apply[V <: Vue](
+  def apply(
     el: js.UndefOr[String] = js.undefined,
     data: js.UndefOr[js.Object] = js.undefined,
     props: js.UndefOr[js.Object] = js.undefined,
-    computed: js.UndefOr[Handler[V]] = js.undefined,
-    methods: js.UndefOr[Handler[V]] = js.undefined,
+    computed: js.UndefOr[Handler[_]] = js.undefined,
+    methods: js.UndefOr[Handler[_]] = js.undefined,
     template: js.UndefOr[String] = js.undefined
-  ): Component[V] =
-    applyInternal(el, data, props, computed, methods, template)
+  ): Component[Vue] =
+    applyInternal[Vue](el, data, props, computed, methods, template)
 
   // TODO support all options
   private def applyInternal[V <: Vue](
     _el: js.UndefOr[String],
     _data: js.UndefOr[js.Object],
     _props: js.UndefOr[js.Object],
-    _computed: js.UndefOr[Handler[V]],
-    _methods: js.UndefOr[Handler[V]],
+    _computed: js.UndefOr[Handler[_]],
+    _methods: js.UndefOr[Handler[_]],
     _template: js.UndefOr[String]
   ): Component[V] = new Component[V] {
     override val el = _el

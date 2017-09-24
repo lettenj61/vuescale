@@ -6,32 +6,40 @@ import scala.scalajs.js.annotation._
 import vuescale.prelude._
 
 @JSExportAll
-case class Treasure(name: String, price: Int)
+case class Todo(id: Int, name: String, var done: Boolean)
 
 @JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
   @ScalaJSDefined
-  class Example extends js.Object {
-    val greet = "Hello, Vue.js"
-    val treasures: js.Array[Treasure] = js.Array(
-      Treasure("Gold piece", 799),
-      Treasure("Silver ring", 1499),
-      Treasure("Book of useful techniques", 6499),
-      Treasure("Old game console", 24999)
+  class TodoList extends js.Object {
+    var title = "Hello, Vue.js"
+    var input = ""
+    var todos: js.Array[Todo] = js.Array(
+      Todo(0, "Learn Vue.js", true),
+      Todo(1, "Learn Scala", true),
+      Todo(2, "Write something awesome", false)
     )
   }
 
-  type ExampleView = Vue with Example 
+  type TodoListView = Vue with TodoList
 
   @JSExport
   def main(): Unit = {
-    val vm: Vue = new Vue(Component[ExampleView](
+    val vm: Vue = new Vue(Component(
       el = "#app",
-      data = new Example,
-      computed = new Handler[ExampleView] {
-        val sumOfTreasures: Callback0[Int] = { (vm: ExampleView) =>
-          vm.treasures.map(_.price).sum
+      data = new TodoList,
+      methods = new Handler[TodoList] {
+        val addTodo: Callback = { vm =>
+          vm.todos.push(Todo(
+            vm.todos.length,
+            vm.input,
+            false
+          ))
+          vm.input = ""
+        }
+        def checkTodo(todo: Todo): Unit = {
+          todo.done = !todo.done
         }
       }
     ))
