@@ -26,7 +26,7 @@ object Hello {
 
   val TodoFooter = Component.builder("todo-footer")
     .template("<p>{{ message }}</p>")
-    .data("message" -> "Enter your todos", "dummy" -> js.Array[Int]())
+    .data("message" -> "Enter your todos")
     .result
 
   @JSExport

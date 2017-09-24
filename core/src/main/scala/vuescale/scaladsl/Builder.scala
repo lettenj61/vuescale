@@ -1,9 +1,9 @@
 package vuescale
 package scaladsl
 
+import scala.language.implicitConversions
+
 import scala.scalajs.js
-import scala.scalajs.js.|
-import scala.scalajs.js.Dynamic.literal
 
 import org.scalajs.dom
 
@@ -26,13 +26,16 @@ class Builder[V] private[scaladsl] (
   def el(selector: String): this.type =
     update("el", selector)
 
+  def el(element: dom.Element): this.type =
+    update("el", element)
+
   def template(string: String): this.type =
     update("template", string)
 
   def data(initData: js.Object): this.type =
     update("data", { () => initData })
 
-  def data(fields: (String, js.Any)*): this.type =
+  def data(fields: (String, Any)*): this.type =
     update("data", { () =>
       js.Dictionary(fields: _*)
     })
@@ -54,7 +57,6 @@ class Builder[V] private[scaladsl] (
 }
 
 object Builder {
-
   implicit def dictionaryIsObject(dict: js.Dictionary[_]): js.Object =
     dict.asInstanceOf[js.Object]
 }
