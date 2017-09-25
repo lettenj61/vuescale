@@ -1,0 +1,11 @@
+{
+  "name": "vuescale",
+  "version": "0.1.0",
+  "private": true,
+  "repository": "https://github.com/lettenj61/vuescale",
+  "author": "lettenj61 <lettenj61@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^11.2.0"
+  }
+}

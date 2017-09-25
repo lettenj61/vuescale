@@ -2,13 +2,13 @@ package vuescale
 package facade
 
 import scala.scalajs.js
-import js.|
-import js.annotation._
+import scala.scalajs.js.|
+import scala.scalajs.js.annotation._
 
-import org.scalajs.dom
-import dom.html.Element
+import org.scalajs.dom.Element
 
-@JSGlobal @js.native
+@JSImport("vue", JSImport.Default, globalFallback = "Vue")
+@js.native
 class Vue(options: js.Any) extends js.Object {
 
   @JSBracketAccess
@@ -86,6 +86,10 @@ trait VueStatic extends js.Object {
   def compile(template: String): Template = js.native
 }
 
+@JSImport("vue", JSImport.Default, globalFallback = "Vue")
+@js.native
+object Vue extends VueStatic
+
 @js.native
 trait Template extends js.Object {
   def render(createElement: js.Function): VNode = js.native
@@ -99,6 +103,9 @@ trait VueConfig extends js.Object {
   var devtools: Boolean = js.native
   var errorHandler: js.Function2[js.Error, _, _] = js.native // TODO
   var ignoredElements: js.Array[String] = js.native
+  var keyCodes: js.Dictionary[Int | js.Array[Int]] = js.native // TODO
+  var performance: Boolean = js.native
+  var productionTip: Boolean = js.native
 }
 
 @js.native

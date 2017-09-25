@@ -1,6 +1,8 @@
+import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 
 val libV = "0.1.0-SNAPSHOT"
 val scalaV = "2.12.3"
+val vueV = "2.4.4"
 
 crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.3")
 
@@ -11,9 +13,8 @@ val commonSettings = Seq(
 
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.3",
-    "com.lihaoyi" %%% "utest" % "0.4.6" % Test
+    "org.scalatest" %%% "scalatest" % "3.0.1" % "test"
   ),
-  testFrameworks += new TestFramework("utest.runner.Framework"),
 
   scalacOptions in Compile ++= Seq(
     "-deprecation",
@@ -27,38 +28,33 @@ val commonSettings = Seq(
 )
 
 val domSettings = Seq(
-  requiresDOM := true,
-  jsEnv := PhantomJSEnv().value
+  requiresDOM in Test := true,
+  jsEnv in Test := new JSDOMNodeJSEnv,
+  jsDependencies ++= Seq(
+    "org.webjars.npm" % "github-com-vuejs-vue" % vueV / "vue.js" % "test"
+  )
 )
 
-lazy val core = project
+lazy val core = project.in(file("vuescale-core"))
   .enablePlugins(ScalaJSPlugin)
-  .settings((commonSettings ++ domSettings): _*)
+  .settings(commonSettings, domSettings)
   .settings(
-    name := "vuescale-core",
-    jsDependencies += "org.webjars" % "vue" % "2.1.3" / "2.1.3/vue.js" % Test
+    name := "vuescale-core"
   )
 
-lazy val scalatags = project.in(file("scalatags"))
-  .dependsOn(core)
+lazy val scalatags = project.in(file("vuescale-scalatags"))
   .enablePlugins(ScalaJSPlugin)
-  .settings((commonSettings ++ domSettings): _*)
+  .settings(commonSettings, domSettings)
   .settings(
     name := "vuescale-scalatags",
-    libraryDependencies += "com.lihaoyi" %%% "scalatags" % "0.6.7"
+    libraryDependencies ++= Seq(
+      "com.lihaoyi" %%% "scalatags" % "0.6.7"
+    )
   )
 
-lazy val example = project.dependsOn(core)
+lazy val example = project.dependsOn(core, scalatags)
   .enablePlugins(ScalaJSPlugin)
   .settings(commonSettings: _*)
   .settings(
     name := "vuescale-example"
-  )
-
-lazy val exampleTags = project.in(file("example-tags"))
-  .dependsOn(core, scalatags)
-  .enablePlugins(ScalaJSPlugin)
-  .settings(commonSettings: _*)
-  .settings(
-    name := "vuescale-tags-example"
   )

@@ -52,6 +52,9 @@ class Builder[V] private[scaladsl] (
   def methods(handler: Handler[_]): this.type =
     update("methods", handler)
 
+  def components(children: (String, js.Any)*): this.type =
+    update("components", js.Dictionary(children: _*))
+
   def name(componentName: String): this.type =
     update("name", componentName)
 }

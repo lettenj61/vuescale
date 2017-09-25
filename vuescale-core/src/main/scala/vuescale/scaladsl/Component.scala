@@ -84,26 +84,31 @@ object Component {
     template: js.UndefOr[String] = js.undefined,
     components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
   ): Component[Vue] =
-    applyInternal[Vue](el, data, props, computed, methods, template, components)
+    applyWithRawValues[Vue](data)(
+      "el" -> el, "props" -> props, "computed" -> computed, "methods" -> methods,
+      "template" -> template, "components" -> components
+    )
 
-  // TODO support all options
-  private def applyInternal[V <: Vue](
-    _el: js.UndefOr[String],
-    _data: js.UndefOr[js.Object],
-    _props: js.UndefOr[js.Object],
-    _computed: js.UndefOr[Handler[_]],
-    _methods: js.UndefOr[Handler[_]],
-    _template: js.UndefOr[String],
-    _components: js.UndefOr[js.Dictionary[js.Any]]
-  ): Component[V] = new Component[V] {
-    override val el = _el
-    override val data = _data.map(x => { () => x })
-    override val props = _props
-    override val computed = _computed
-    override val methods = _methods
-    override val template = _template
-    override val components = _components
+  private def applyWithRawValues[V <: Vue](
+    data: js.UndefOr[js.Object])(rest: (String, js.Any)*): Component[V] = {
+
+    val wrappedDataFn: js.UndefOr[js.Function0[js.Object]] =
+      data.map(x => { () => x })
+
+    val opts: js.Dictionary[js.Any] = js.Dictionary()
+
+    if (!js.isUndefined(wrappedDataFn)) {
+      opts("data") = wrappedDataFn
+    }
+
+    rest.filterNot(js.isUndefined).foreach { case (key, opt) => 
+      opts(key) = opt
+    }
+
+    opts.asInstanceOf[Component[V]]
   }
 
   def builder[V <: Vue](name: String): Builder[V] = new Builder[V](name)
+
+  def builder[V <: Vue]: Builder[V] = new Builder[V]()
 }

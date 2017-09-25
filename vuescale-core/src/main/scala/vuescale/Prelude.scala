@@ -7,7 +7,7 @@ import vuescale.facade._
 object prelude {
 
   type Vue = facade.Vue
-  lazy val Vue: VueStatic = js.Dynamic.global.Vue.asInstanceOf[VueStatic]
+  lazy val Vue: facade.Vue.type = facade.Vue
 
   type Handler[V <: js.Object] = scaladsl.Handler[V]
 
