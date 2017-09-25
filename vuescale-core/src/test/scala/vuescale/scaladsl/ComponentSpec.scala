@@ -90,6 +90,33 @@ class ComponentSpec extends FunSpec with BeforeAndAfter {
       assert(vm.$el.innerHTML == "<span>child</span>")
     }
 
+    // TODO: fragment instance warning
+
+    @ScalaJSDefined
+    class TestView(val view: String) extends js.Object
+
+    it("dynamic") {
+      val vm = new Vue(
+        Component.builder
+          .template("<component :is=\"view\" :view=\"view\"></component>")
+          .data("view" -> "view-a")
+          .components(
+            "view-a" -> Component(
+              template = "<div>foo {{view}}</div>",
+              data = new TestView("a")
+            ),
+            "view-b" -> Component(
+              template = "<div>bar {{view}}</div>",
+              data = new TestView("b")
+            )
+          )
+          .result
+      ).$mount()
+
+      assert(vm.$el.outerHTML == "<div view=\"view-a\">foo a</div>")
+      // TODO update component
+    }
+
   }
 
 }
