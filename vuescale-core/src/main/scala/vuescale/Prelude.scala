@@ -2,8 +2,6 @@ package vuescale
 
 import scala.scalajs.js
 
-import vuescale.facade._
-
 object prelude {
 
   type Vue = facade.Vue
@@ -13,5 +11,8 @@ object prelude {
 
   type Component[V <: Vue] = scaladsl.Component[V]
   val Component = scaladsl.Component
-}
 
+  type CreateElement = facade.CreateElement
+
+  type VNode = facade.VNode
+}

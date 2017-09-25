@@ -1,6 +1,7 @@
 package vuescale
 
 import scala.scalajs.js
+
 import org.scalajs.dom
 
 package object facade {

@@ -4,6 +4,7 @@ package scaladsl
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
 
+import vuescale.facade.CreateElement
 import vuescale.facade.Vue
 
 @ScalaJSDefined
@@ -22,7 +23,7 @@ trait DomOptions extends js.Object {
   def el: js.UndefOr[String] = js.undefined
   def template: js.UndefOr[String] = js.undefined
   // TODO more strong type
-  def render: js.UndefOr[js.Function] = js.undefined
+  def render: js.UndefOr[CreateElement] = js.undefined
   def renderError: js.UndefOr[js.Function] = js.undefined
 }
 
@@ -82,11 +83,12 @@ object Component {
     computed: js.UndefOr[Handler[_]] = js.undefined,
     methods: js.UndefOr[Handler[_]] = js.undefined,
     template: js.UndefOr[String] = js.undefined,
-    components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
+    components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined,
+    render: js.UndefOr[js.Function] = js.undefined
   ): Component[Vue] =
     applyWithRawValues[Vue](data)(
       "el" -> el, "props" -> props, "computed" -> computed, "methods" -> methods,
-      "template" -> template, "components" -> components
+      "template" -> template, "components" -> components, "render" -> render
     )
 
   private def applyWithRawValues[V <: Vue](

@@ -7,6 +7,8 @@ import scala.scalajs.js
 
 import org.scalajs.dom
 
+import vuescale.facade.CreateElement
+
 /** Helper class to build components in type safe way.
  */
 class Builder[V] private[scaladsl] (
@@ -57,6 +59,12 @@ class Builder[V] private[scaladsl] (
 
   def name(componentName: String): this.type =
     update("name", componentName)
+
+  def render(renderFn: js.Function1[CreateElement, js.Any]): this.type =
+    update("render", renderFn)
+
+  def render(renderFn: js.ThisFunction1[V, CreateElement, js.Any]): this.type =
+    update("render", renderFn)
 }
 
 object Builder {
