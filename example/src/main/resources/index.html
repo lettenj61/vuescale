@@ -11,11 +11,11 @@
       <h3>{{ title }}</h3>
       <input type="text" v-model="input" @keyup.enter="addTodo">
       <div v-for="todo in todos" :key="todo.id">
+        <input type="checkbox" @click="checkTodo(todo)" :checked="todo.done">
         <span v-if="todo.done">
           <s>{{ todo.name }}</s>
         </span>
         <span v-else>{{ todo.name }}</span>
-        <input type="checkbox" @click="checkTodo(todo)">
       </div>
       <todo-footer></todo-footer>
     </div>

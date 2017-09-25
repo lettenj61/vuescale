@@ -163,3 +163,52 @@ class TodoListHandler extends Handler[TodoList] {
   }
 }
 ```
+
+
+## Scalatags integration
+
+```scala
+import vuescale.scaladsl.tags.template.prefix._
+import vuescale.scaladsl.tags.template.helper._
+
+@JSExportAll
+case class Hero(
+  name: String,
+  power: Int,
+  bio: String
+)
+
+@ScalaJSDefined
+class HeroBrowser extends js.Object {
+  val heroes = js.Array[Hero]()
+}
+
+type HeroBrowserView = Vue with HeroBrowser
+
+val HeroBrowserView = ScalatagsComponent.builder[HeroBrowserView]
+  .name("hero-browser")
+  .template(
+    <.div(
+      ^.vFor := "hero in heroes",
+      ^.vBind.style := "heroStyle",
+      <.p(m"hero.name"),
+      <.p(
+        <.span(vBind.style := "gradient(hero)"),
+        <.span(<.a(
+          ^.href := "toDetailUrl(hero.name)",
+          m"hero.bio"
+        ))
+      )
+    )
+  )
+  .methods(new Handler[HeroBrowser] {
+    def toDetailUrl(name: String): String = // ...
+    def gradient(hero: Hero): StyleMap = StyleMap(
+      // ...
+    )
+  })
+
+val vm = new Vue(Component(
+  render = (h: CreateElement) => h(HeroBrowserView)
+))
+```
