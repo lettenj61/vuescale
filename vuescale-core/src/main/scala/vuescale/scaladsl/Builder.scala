@@ -63,7 +63,7 @@ class Builder[V] private[scaladsl] (
   def render(renderFn: js.Function1[CreateElement, js.Any]): this.type =
     update("render", renderFn)
 
-  def render(renderFn: js.ThisFunction1[V, CreateElement, js.Any]): this.type =
+  def render[V0](renderFn: js.ThisFunction1[V0, CreateElement, js.Any]): this.type =
     update("render", renderFn)
 }
 
