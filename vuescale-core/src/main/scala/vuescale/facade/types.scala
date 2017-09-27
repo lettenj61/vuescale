@@ -57,8 +57,10 @@ class Vue(options: js.Any) extends js.Object {
   ): this.type = js.native
 
   def $emit(event: String, args: js.Array[Any]): this.type = js.native
-  def $nextTick(callback: js.ThisFunction0[this.type, Unit]): Unit = js.native
-  def $nextTick(): js.Promise[Unit] = js.native
+  def $nextTick(callback: js.ThisFunction0[Vue, Unit]): Unit = js.native
+  // in TypeScript definition it is said `$nextTick` will return Promise<void>,
+  // but I found on async test that it has reference to this very Vue instance
+  def $nextTick(): js.Promise[Vue] = js.native
   var $createElement: js.Function = js.native // FIXME give clearer type
 }
 

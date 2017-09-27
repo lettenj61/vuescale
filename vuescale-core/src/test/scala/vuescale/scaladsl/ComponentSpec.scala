@@ -2,8 +2,10 @@ package vuescale
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.ScalaJSDefined
+import scala.scalajs.js.Thenable.Implicits._
+import scala.scalajs.concurrent.JSExecutionContext
 
-import org.scalatest.{BeforeAndAfter, FunSpec}
+import org.scalatest.{BeforeAndAfter, AsyncFunSpec}
 
 import vuescale.prelude._
 
@@ -12,7 +14,12 @@ import vuescale.prelude._
  * https://github.com/vuejs/vue/blob/dev/test/unit/features/component/component.spec.js
  */
 
-class ComponentSpec extends FunSpec with BeforeAndAfter {
+class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
+
+  // Must override here to use correct execution context in JS
+  // @see https://github.com/scalatest/scalatest/issues/1039
+  implicit override def executionContext =
+    JSExecutionContext.queue
 
   @ScalaJSDefined
   class Data[A](val a: A) extends js.Object
@@ -114,7 +121,15 @@ class ComponentSpec extends FunSpec with BeforeAndAfter {
       ).$mount()
 
       assert(vm.$el.outerHTML == "<div view=\"view-a\">foo a</div>")
-      // TODO update component
+      vm("view") = "view-b"
+      vm.$nextTick().map { _ =>
+        assert(vm.$el.outerHTML == "<div view=\"view-b\">bar b</div>")
+        vm("view") = ""
+      } map { _ =>
+        val data = vm.$el.asInstanceOf[js.Dynamic].data.toString
+        assert(vm.$el.nodeType == 8)
+        assert(data == "")
+      }
     }
 
   }
