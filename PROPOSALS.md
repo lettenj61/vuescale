@@ -77,13 +77,12 @@ Here is simplified definition of `Component`:
 
 ```scala
 // TODO
-@ScalaJSDefined
 trait Component[V <: Vue] extends js.Object {
 
   def el: js.UndefOr[String] = js.undefined
   def data: js.UndefOr[js.Object] = js.undefined
-  def computed: js.UndefOr[Handler[V]] = js.undefined
-  def methods: js.UndefOr[Handler[V]] = js.undefined
+  def computed: js.UndefOr[Handler[_]] = js.undefined
+  def methods: js.UndefOr[Handler[_]] = js.undefined
   // more options to come ...
 }
 ```
@@ -96,7 +95,6 @@ First, give your component a type. There will be several ways to doing this.
 Say we have following data structure:
 
 ```scala
-@ScalaJSDefined
 class Todo(
   val id: Int,
   val title: String,
@@ -107,21 +105,19 @@ class Todo(
 When you don't have to access Vue instance methods, use standalone JS type.
 
 ```scala
-@ScalaJSDefined
 trait TodoList extends js.Object {
   var input: String
   var todos: js.Array[Todo]
 }
 
-// Inject it into Vue and use it
-type TodoListView = Vue with TodoList 
-new Vue(Component[TodoListView](
+// Use Scala defined data options
+new Vue(Component(
   data = new TodoList {
     var input = ""
     var todos = js.Array[Todo]()
   },
-  methods = new Handler[TodoListView] {
-    val addTodo: Callback = { (vm: TodoListView) =>
+  methods = new Handler[TodoList] {
+    val addTodo: Callback = { vm => // `vm` type is infered
       vm.todos += new Todo(
         vm.todos.length,
         vm.input,
@@ -133,9 +129,9 @@ new Vue(Component[TodoListView](
 ))
 ```
 
-Here type `Callback` in `methods` object is merely type alias for `js.ThisFunction0[TodoListView, Unit]`. It is required because we have to tell Scala.js compiler to bind `this` context of our component option correctly. `Callback` is internal abstract type member of `Handler[V]`.
+Here type `Callback` in `methods` object is merely type alias for `js.ThisFunction0[TodoList, Unit]`. It is required because we have to tell Scala.js compiler to bind `this` context of our component option correctly. `Callback` is internal abstract type member of `Handler[V]`.
 
-If you need access to Vue instance, declare the **ideal** type for your Component by extending `Vue`.
+If you need access to Vue instance, declare the **ideal** type for your Component and mix it with `Vue` by inheritance or trait mixins.
 
 ```scala
 @js.native
@@ -146,67 +142,56 @@ trait TodoListView extends Vue with TodoList {
 
 // the handler
 val todoMethods = new Handler[TodoListView] {
-  val addTodo: Callback = { vm: TodoListView => 
+  val addTodo: Callback = { vm => 
     // We can use Vue instance here
     vm.$emit("newTodo")
   }
 }
 ```
 
-**Can we?**
+## Tag DSL
+
+Vuescale ships with Scalatags' inspired tag syntax to build Vue.js render functions smoothly in Scala.
 
 ```scala
-@ScalaJSDefined
-class TodoListHandler extends Handler[TodoList] {
-  def addTodo: Callback = { vm =>
-    // ...
-  }
-}
-```
+import scala.scalajs.js
+import scala.scalajs.js.annotation._
 
-
-## Scalatags integration
-
-```scala
-import vuescale.scaladsl.tags.template.prefix._
-import vuescale.scaladsl.tags.template.helper._
+import vuescale.prelude._
+import vuescale.tags.syntax._
+import vuescale.tags.v
 
 @JSExportAll
 case class Hero(
+  id: String,
   name: String,
   power: Int,
   bio: String
 )
 
-@ScalaJSDefined
 class HeroBrowser extends js.Object {
   val heroes = js.Array[Hero]()
 }
 
-type HeroBrowserView = Vue with HeroBrowser
+def getDetailURL(hero: Hero): String = ???
 
-val HeroBrowserView = ScalatagsComponent.builder[HeroBrowserView]
+val HeroBrowserView = Component.builder[HeroBrowser]
   .name("hero-browser")
-  .template(
-    <.div(
-      ^.vFor := "hero in heroes",
-      ^.vBind.style := "heroStyle",
-      <.p(m"hero.name"),
-      <.p(
-        <.span(vBind.style := "gradient(hero)"),
-        <.span(<.a(
-          ^.href := "toDetailUrl(hero.name)",
-          m"hero.bio"
-        ))
-      )
+  .render { vm =>
+    div(
+      h1("Hero browser"),
+      if (vm.heroes.nonEmpty) {
+        for (hero <- vm.heroes) yield {
+          div(className := "hero-detail")(
+            p(s"Hero: ${vm.name}"),
+            a(href ::= getDetailURL(hero))
+          )
+        }
+      } else {
+        span("No hero is in town!")
+      }
     )
-  )
-  .methods(new Handler[HeroBrowser] {
-    def toDetailUrl(name: String): String = // ...
-    def gradient(hero: Hero): StyleMap = StyleMap(
-      // ...
-    )
-  })
+  }.result
 
 val vm = new Vue(Component(
   render = (h: CreateElement) => h(HeroBrowserView)
