@@ -33,7 +33,7 @@ object Hello {
     val vm: Vue = new Vue(Component(
       el = "#app",
       data = new TodoList,
-      methods = new Handler[TodoList] {
+      methods = new Handler[TodoListView] {
         val addTodo: Callback = { vm =>
           vm.todos.push(Todo(
             vm.todos.length,
@@ -46,9 +46,7 @@ object Hello {
           todo.done = !todo.done
         }
       },
-      components = js.defined {
-        js.Dictionary("todo-footer" -> TodoFooter)
-      }
+      components = Seq("todo-footer" -> TodoFooter)
     ))
   }
 }

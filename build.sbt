@@ -59,7 +59,7 @@ lazy val core = project.in(file("vuescale-core"))
 
 lazy val example = project.dependsOn(core)
   .enablePlugins(ScalaJSPlugin)
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     name := "vuescale-example"
   )

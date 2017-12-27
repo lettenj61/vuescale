@@ -10,4 +10,6 @@ package object facade {
   type DirectiveFunction = js.Function4[dom.html.Element, VNodeDirective, VNode, VNode, Unit]
 
   type PluginFunction[T] = js.Function2[VueStatic, js.UndefOr[T], Unit]
+  type RenderFunction = js.Function1[CreateElement, VNode]
+  type RenderThisFunction[T] = js.ThisFunction1[T, CreateElement, VNode]
 }

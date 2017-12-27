@@ -70,31 +70,45 @@ trait Component[V]
 
 object Component {
 
-  def apply(
+  type ComponentDefs = Iterable[(String, Component[_])]
+
+  /** Create new component options.
+   */
+  def apply[V <: Vue](
     el: js.UndefOr[String] = js.undefined,
     data: js.UndefOr[js.Object] = js.undefined,
     props: js.UndefOr[js.Object] = js.undefined,
     computed: js.UndefOr[Handler[_]] = js.undefined,
     methods: js.UndefOr[Handler[_]] = js.undefined,
     template: js.UndefOr[String] = js.undefined,
-    components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined,
+    components: ComponentDefs = Nil,
     render: js.UndefOr[js.Function] = js.undefined
-  ): Component[Vue] =
-    applyWithRawValues[Vue](data)(
-      "el" -> el, "props" -> props, "computed" -> computed, "methods" -> methods,
-      "template" -> template, "components" -> components, "render" -> render
+  ): Component[V] =
+    applyInternal[V](data, components)(
+      "el" -> el,
+      "props" -> props,
+      "computed" -> computed,
+      "methods" -> methods,
+      "template" -> template,
+      "render" -> render
     )
 
-  private def applyWithRawValues[V <: Vue](
-    data: js.UndefOr[js.Object])(rest: (String, js.Any)*): Component[V] = {
+  private def applyInternal[V <: Vue](
+    data: js.UndefOr[js.Object],
+    components: ComponentDefs
+  )(rest: (String, js.Any)*): Component[V] = {
 
-    val wrappedDataFn: js.UndefOr[js.Function0[js.Object]] =
+    val wrappedDataFn: js.UndefOr[js.Function] =
       data.map(x => { () => x })
 
     val opts: js.Dictionary[js.Any] = js.Dictionary()
 
     if (!js.isUndefined(wrappedDataFn)) {
       opts("data") = wrappedDataFn
+    }
+
+    if (components.nonEmpty) {
+      opts("components") = js.Dictionary(components.toSeq: _*)
     }
 
     rest.filterNot(js.isUndefined).foreach { case (key, opt) => 
