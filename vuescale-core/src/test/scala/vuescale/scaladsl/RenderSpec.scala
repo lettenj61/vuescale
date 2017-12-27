@@ -9,10 +9,8 @@ import vuescale.prelude._
 
 class RenderSpec extends FunSpec {
 
-  @ScalaJSDefined
   class Task(val id: Int, val name: String) extends js.Object
 
-  @ScalaJSDefined
   trait TaskList extends js.Object {
     val items: js.Array[Task]
   }

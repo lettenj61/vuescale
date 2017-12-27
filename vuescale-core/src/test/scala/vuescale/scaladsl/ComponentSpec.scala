@@ -5,7 +5,7 @@ import scala.scalajs.js.annotation.ScalaJSDefined
 import scala.scalajs.js.Thenable.Implicits._
 import scala.scalajs.concurrent.JSExecutionContext
 
-import org.scalatest.{BeforeAndAfter, AsyncFunSpec}
+import org.scalatest.{ AsyncFunSpec, BeforeAndAfter }
 
 import vuescale.prelude._
 
@@ -21,9 +21,7 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
   implicit override def executionContext =
     JSExecutionContext.queue
 
-  @ScalaJSDefined
   class Data[A](val a: A) extends js.Object
-
   def Data[A](arg: A): Data[A] = new Data(arg)
 
   before {
@@ -99,7 +97,6 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
 
     // TODO: fragment instance warning
 
-    @ScalaJSDefined
     class TestView(val view: String) extends js.Object
 
     it("dynamic") {
