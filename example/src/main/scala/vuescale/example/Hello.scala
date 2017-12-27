@@ -11,7 +11,6 @@ case class Todo(id: Int, name: String, var done: Boolean)
 @JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
-  @ScalaJSDefined
   class TodoList extends js.Object {
     var title = "Hello, Vue.js"
     var input = ""
