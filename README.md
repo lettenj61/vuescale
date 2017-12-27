@@ -15,47 +15,62 @@ But currently most of the things are work in progress.
 Currently, this snippet from [example sources][example] below is all I can show you.
 
 ```html
-<script type="text/javascript" src="../vuescale-example-fastopt.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<script src="../vuescale-example-fastopt.js"></script>
 <div id="app">
-    <h3>{{ greets.morning }}, Vue.js!</h3>
-    <ul>
-        <li v-for="treasure in treasures">
-            It costs {{treasure}} yen in JPY!
-        </li>
-    </ul>
+    <h3>{{ greet }}</h3>
+    <template v-if="treasures.length > 3">
+      <ul>
+          <li v-for="treasure in treasures">
+              {{ treasure.name }} costs {{ treasure.price }} yen in JPY!
+          </li>
+      </ul>
+      <p>Total cost: {{ sumOfTreasures }}</p>
+    </template>
 </div>
-<script>vuescale.example.Hello().main();</script>
+<script>
+    vuescale.example.Hello.main();
+</script>
 ```
 
 ```scala
 package vuescale.example
 
 import scala.scalajs.js
-import js.annotation._
+import scala.scalajs.js.annotation._
 
 import vuescale.prelude._
+
+@JSExportAll
+case class Treasure(name: String, price: Int)
 
 @JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
   @ScalaJSDefined
-  class GreetingPage extends js.Object {
-    val isChecked: Boolean = true
-    val treasures: js.Array[Int] = js.Array(120, 460, 1080, 9600)
-    val greets = js.Dictionary(
-      "morning" -> "Ohayo", "afternoon" -> "Konnichiwa",
-      "night" -> "Konbanwa", "sleep" -> "Oyasumi"
+  class Example extends js.Object {
+    val greet = "Hello, Vue.js"
+    val treasures: js.Array[Treasure] = js.Array(
+      Treasure("Gold piece", 799),
+      Treasure("Silver ring", 1499),
+      Treasure("Book of useful techniques", 6499),
+      Treasure("Old game console", 24999)
     )
   }
 
+  type ExampleView = Vue with Example 
+
   @JSExport
   def main(): Unit = {
-
-    val opts = new ComponentOptions[Vue, GreetingPage](
+    val vm: Vue = new Vue(Component[ExampleView](
       el = "#app",
-      initData = new GreetingPage
-    )
-    val vm: Vue = new Vue(opts.build())
+      data = new Example,
+      computed = new Handler[ExampleView] {
+        val sumOfTreasures: Callback0[Int] = { (vm: ExampleView) =>
+          vm.treasures.map(_.price).sum
+        }
+      }
+    ))
   }
 }
 ```
@@ -63,4 +78,4 @@ object Hello {
 [sjs]:https://www.scala-js.org/
 [vue]:https://vuejs.org/
 
-[example]:https://github.com/lettenj61/vuescale/blob/master/example/src/main/scala/vuescale/example/Hello.scala
+[example]:https://github.com/lettenj61/vuescale/blob/redesign/example/src/main/scala/vuescale/example/Hello.scala

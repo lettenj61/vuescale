@@ -1,45 +1,52 @@
 package vuescale.example
 
 import scala.scalajs.js
-import js.annotation._
-
-import org.scalajs.dom
+import scala.scalajs.js.annotation._
 
 import vuescale.prelude._
+
+@JSExportAll
+case class Todo(id: Int, name: String, var done: Boolean)
 
 @JSExportTopLevel("vuescale.example.Hello")
 object Hello {
 
-  @ScalaJSDefined
-  class GreetingPage extends js.Object {
-    val isChecked: Boolean = true
-    val treasures: js.Array[Int] = js.Array(120, 460, 1080, 9600)
-    val greets = js.Dictionary(
-      "morning" -> "Ohayo",
-      "afternoon" -> "Konnichiwa",
-      "night" -> "Konbanwa",
-      "sleep" -> "Oyasumi"
+  class TodoList extends js.Object {
+    var title = "Hello, Vue.js"
+    var input = ""
+    var todos: js.Array[Todo] = js.Array(
+      Todo(0, "Learn Vue.js", true),
+      Todo(1, "Learn Scala", true),
+      Todo(2, "Write something awesome", false)
     )
-    var count: Int = 150
   }
 
-  @JSExport
-  def appStart(): Unit = {
-    new Vue(createPageOptions())
-  }
+  type TodoListView = Vue with TodoList
+
+  val TodoFooter = Component.builder("todo-footer")
+    .template("<p>{{ message }}</p>")
+    .data("message" -> "Enter your todos")
+    .result
 
   @JSExport
-  def createPageOptions(): js.Dynamic = {
-
-    val builder = new ComponentBuilder("#app", new GreetingPage) {
-      computed.sumOfTreasures = Bind(vm => vm.treasures.sum)
-      computed.doubleCount = Bind(vm => vm.count * 2)
-      methods.addTreasure = Bind { (vm: Context, i: Int) =>
-        vm.treasures += (i * 460)
-      }
-      methods.countUp = Bind(vm => vm.count += 10)
-    }
-
-    builder.build
+  def main(): Unit = {
+    val vm: Vue = new Vue(Component(
+      el = "#app",
+      data = new TodoList,
+      methods = new Handler[TodoListView] {
+        val addTodo: Callback = { vm =>
+          vm.todos.push(Todo(
+            vm.todos.length,
+            vm.input,
+            false
+          ))
+          vm.input = ""
+        }
+        def checkTodo(todo: Todo): Unit = {
+          todo.done = !todo.done
+        }
+      },
+      components = Seq("todo-footer" -> TodoFooter)
+    ))
   }
 }
