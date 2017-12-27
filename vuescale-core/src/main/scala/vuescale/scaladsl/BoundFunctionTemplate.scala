@@ -2,13 +2,11 @@ package vuescale
 package scaladsl
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation._
 
 /** Base trait provides type alias for `js.ThisFunction` types.
  *
  *  Currently it supports functions with up to 7 arguments.
  */
-@ScalaJSDefined
 trait BoundFunctionTemplate[This] extends js.Object {
   type Callback0[R] = js.ThisFunction0[This, R]
   type Callback1[A, R] = js.ThisFunction1[This, A, R]

@@ -118,7 +118,6 @@ trait PluginObject[T] extends js.Object {
   def get(key: String): js.Any = js.native
 }
 
-@ScalaJSDefined
 class RenderContext(
   val props: js.Any,
   val children: js.Array[VNode],
@@ -129,13 +128,11 @@ class RenderContext(
   def slots(): js.Any = js.undefined
 }
 
-@ScalaJSDefined
 trait WatchOptions extends js.Object {
   val deep: js.UndefOr[Boolean] = js.undefined
   val immediate: js.UndefOr[Boolean] = js.undefined
 }
 
-@ScalaJSDefined
 trait DirectiveOptions extends js.Object {
   var bind: js.UndefOr[DirectiveFunction] = js.undefined
   var inserted: js.UndefOr[DirectiveFunction] = js.undefined

@@ -7,7 +7,6 @@ import scala.scalajs.js.annotation._
 import vuescale.facade.CreateElement
 import vuescale.facade.Vue
 
-@ScalaJSDefined
 trait DataOptions[V] extends js.Object {
   def data: js.UndefOr[js.Function0[js.Object]] = js.undefined
   def props: js.UndefOr[js.Object] = js.undefined
@@ -18,7 +17,6 @@ trait DataOptions[V] extends js.Object {
   def watch: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
 }
 
-@ScalaJSDefined
 trait DomOptions extends js.Object {
   def el: js.UndefOr[String] = js.undefined
   def template: js.UndefOr[String] = js.undefined
@@ -27,7 +25,6 @@ trait DomOptions extends js.Object {
   def renderError: js.UndefOr[js.Function] = js.undefined
 }
 
-@ScalaJSDefined
 trait LifecycleOptions[V] extends js.Object {
   type LifecycleHook = js.ThisFunction0[V, Unit]
 
@@ -43,7 +40,6 @@ trait LifecycleOptions[V] extends js.Object {
   def destroyed: js.UndefOr[LifecycleHook] = js.undefined
 }
 
-@ScalaJSDefined
 trait AssetOptions extends js.Object {
   // TODO more clear type
   def directives: js.UndefOr[js.Object] = js.undefined
@@ -51,7 +47,6 @@ trait AssetOptions extends js.Object {
   def components: js.UndefOr[js.Dictionary[js.Any]] = js.undefined
 }
 
-@ScalaJSDefined
 trait CompositionOptions extends js.Object {
   def parent: js.UndefOr[Vue] = js.undefined
   // TODO give clear type
@@ -60,7 +55,6 @@ trait CompositionOptions extends js.Object {
   def `extends`: js.UndefOr[js.Object] = js.undefined
 }
 
-@ScalaJSDefined
 trait Component[V]
     extends DataOptions[V]
        with DomOptions
