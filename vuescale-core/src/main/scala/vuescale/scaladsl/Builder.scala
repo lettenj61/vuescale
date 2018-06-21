@@ -13,7 +13,7 @@ import vuescale.facade.CreateElement
  */
 class Builder[V] private[scaladsl] (
   protected[this] val proxy: js.Dictionary[js.Any] = js.Dictionary()
-) extends Proxy[V] {
+) {
 
   private[scaladsl] def this(name: String) = this {
     js.Dictionary[js.Any]("name" -> name)
