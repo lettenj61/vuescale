@@ -12,18 +12,19 @@ import vuescale.facade.CreateElement
 /** Helper class to build components in type safe way.
  */
 class Builder[V] private[scaladsl] (
-  private var inner: js.Dictionary[js.Any] = js.Dictionary()
-) {
+  protected[this] val proxy: js.Dictionary[js.Any] = js.Dictionary()
+) extends Proxy[V] {
 
   private[scaladsl] def this(name: String) = this {
     js.Dictionary[js.Any]("name" -> name)
   }
 
   private[this] def update(key: String, value: js.Any): this.type = {
-    inner(key) = value; this
+    proxy(key) = value
+    this
   }
 
-  def build: Component[V] = inner.asInstanceOf[Component[V]]
+  def build: Component[V] = proxy.asInstanceOf[Component[V]]
 
   def el(selector: String): this.type =
     update("el", selector)
