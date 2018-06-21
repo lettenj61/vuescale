@@ -25,10 +25,7 @@ class TagDSLSpec extends FunSpec {
     it ("can render a component") {
       class Box(var label: String) extends js.Object
       val vtag =
-        <.div(
-          ^.name := "test",
-          ^.hidden,
-          ^.innerHTML := "<h1>GOOD ENOUGH</h1>")(
+        <.div(^.name := "test", ^.hidden)(
           <.button(
             ^.onClick := { (e: dom.MouseEvent) => console.log("%o", e) }
           )

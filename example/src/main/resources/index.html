@@ -3,22 +3,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Hello, Vuescale!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
   </head>
   <body>
     <script type="text/javascript" src="https://unpkg.com/vue"></script>
     <script type="text/javascript" src="../vuescale-example-fastopt.js"></script>
-    <div id="app">
-      <h3>{{ title }}</h3>
-      <input type="text" v-model="input" @keyup.enter="addTodo">
-      <div v-for="todo in todos" :key="todo.id">
-        <input type="checkbox" @click="checkTodo(todo)" :checked="todo.done">
-        <span v-if="todo.done">
-          <s>{{ todo.name }}</s>
-        </span>
-        <span v-else>{{ todo.name }}</span>
+    <section class="section">
+      <div class="container">
+        <div id="app">
+          <todo-main></todo-main>
+        </div>
       </div>
-      <todo-footer></todo-footer>
-    </div>
+    </section>
     <script>
       vuescale.example.Hello.main();
     </script>

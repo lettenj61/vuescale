@@ -1,7 +1,5 @@
 package vuescale
 
-import scala.scalajs.js
-
 import org.scalajs.dom
 
 package object tags {
@@ -19,6 +17,8 @@ package object tags {
   type VDomProp = internal.VDomProp
   val VDomProp: internal.VDomProp.type = internal.VDomProp
 
-  type VEventListener[E <: dom.Event, R] = internal.VEventListener[E, R]
+  type VEventListener[E <: dom.Event] = internal.VEventListener[E]
   val VEventListener: internal.VEventListener.type = internal.VEventListener
+
+  val ClassMap: internal.ClassMap.type = internal.ClassMap
 }

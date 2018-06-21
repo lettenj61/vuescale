@@ -92,6 +92,9 @@ object internal {
     lazy val tabindex: AttributeKey[Int] = intAttribute("tabindex")
     lazy val target: AttributeKey[String] = stringAttribute("target")
     lazy val title: AttributeKey[String] = stringAttribute("title")
+    lazy val `type`: AttributeKey[String] = stringAttribute("type")
+    def tpe: AttributeKey[String] = `type`
+    def typeName: AttributeKey[String] = `type`
     // translate
     // xmlns
   }
@@ -141,28 +144,55 @@ object internal {
 
   /* Vue.js event handler modifiers */
 
-  sealed abstract class EventKey[E <: dom.Event, R](val name: String) {
-    def := (handler: E => R): VEventListener[E, R] =
+  sealed abstract class EventKey[E <: dom.Event](val name: String) {
+    def := (handler: E => _): VEventListener[E] =
       VEventListener(name, handler)
   }
 
   trait Events {
-    protected[this] def mkEvent[E <: dom.Event, R](eventName: String): EventKey[E, R] =
-      new EventKey[E, R](eventName) {}
+    protected[this] def mkEvent[E <: dom.Event](eventName: String): EventKey[E] =
+      new EventKey[E](eventName) {}
 
-    object onClick extends EventKey[dom.MouseEvent, js.Any]("click")
+    protected[this] def mouseEvent(eventName: String): EventKey[dom.MouseEvent] =
+      mkEvent[dom.MouseEvent](eventName)
+
+    lazy val onClick: EventKey[dom.MouseEvent] = mouseEvent("click")
+    lazy val onDblClick: EventKey[dom.MouseEvent] = mouseEvent("dblclick")
+    lazy val onMouseDown: EventKey[dom.MouseEvent] = mouseEvent("mousedown")
+    lazy val onMouseMove: EventKey[dom.MouseEvent] = mouseEvent("mousemove")
+    lazy val onMouseOut: EventKey[dom.MouseEvent] = mouseEvent("mouseout")
+    lazy val onMouseOver: EventKey[dom.MouseEvent] = mouseEvent("mouseover")
+    lazy val onMouseLeave: EventKey[dom.MouseEvent] = mouseEvent("mouseleave")
+    lazy val onMouseEnter: EventKey[dom.MouseEvent] = mouseEvent("mouseenter")
+    lazy val onMouseUp: EventKey[dom.MouseEvent] = mouseEvent("mouseup")
+
+    lazy val onKeyDown: EventKey[dom.KeyboardEvent] = mkEvent[dom.KeyboardEvent]("keydown")
+    lazy val onKeyUp: EventKey[dom.KeyboardEvent] = mkEvent[dom.KeyboardEvent]("keyup")
+    lazy val onKeyPress: EventKey[dom.KeyboardEvent] = mkEvent[dom.KeyboardEvent]("keypress")
+
+    lazy val onInput: EventKey[dom.Event] = mkEvent[dom.Event]("input")
   }
 
   /* VNode tag modifiers */
 
   trait TagName {
     def name: String
-    def apply(attrs: VModifier*): VTag
+    def apply(frags: VFragment*): VTag
   }
 
   abstract class AbstractTag(final val name: String) extends TagName {
-    def apply(attrs: VModifier*): VTag =
-      VTag(name, attrs.toSeq)
+    def apply(frags: VFragment*): VTag = {
+      val (children, modifiers) = frags.partition(frag => frag match {
+        case t: VTag => true
+        case m: VModifier => false
+      })
+
+      VTag(
+        name,
+        modifiers.asInstanceOf[Seq[VModifier]],
+        children.asInstanceOf[Seq[VTag]]
+      )
+    }
   }
 
   trait Tags {
@@ -175,6 +205,13 @@ object internal {
     lazy val button: TagName = mkTag("button")
     lazy val div: TagName = mkTag("div")
     lazy val form: TagName = mkTag("form")
+    lazy val h1: TagName = mkTag("h1")
+    lazy val h2: TagName = mkTag("h2")
+    lazy val h3: TagName = mkTag("h3")
+    lazy val h4: TagName = mkTag("h4")
+    lazy val h5: TagName = mkTag("h5")
+    lazy val h6: TagName = mkTag("h6")
+    lazy val input: TagName = mkTag("input")
     lazy val li: TagName = mkTag("li")
     lazy val p: TagName = mkTag("p")
     lazy val section: TagName = mkTag("section")
@@ -183,16 +220,17 @@ object internal {
 
   /* Fragments */
 
-  sealed trait VModifier {
+  sealed trait VFragment
+  sealed trait VModifier extends VFragment {
     def name: String
     def value: js.Any
   }
   case class VAttribute(name: String, value: js.Any) extends VModifier
   case class VBinding(name: String, value: js.Any) extends VModifier
   case class VDomProp(name: String, value: js.Any) extends VModifier
-  case class VEventListener[E <: dom.Event, R](
+  case class VEventListener[E <: dom.Event](
     name: String,
-    value: js.Function1[E, R],
+    value: js.Function1[E, _],
     native: Boolean = false
   ) extends VModifier
   case class VText(value: js.Any) extends VModifier {
@@ -203,7 +241,7 @@ object internal {
     tag: String,
     modifiers: Seq[VModifier],
     childNodes: Seq[VTag] = Nil
-  ) {
+  ) extends VFragment {
     def apply(nodes: VTag*): VTag = copy(childNodes = nodes.toSeq)
 
     def decodeModifiers: (Option[String], js.Dictionary[js.Any]) = {
