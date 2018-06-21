@@ -8,6 +8,8 @@ import scala.scalajs.js
 import org.scalajs.dom
 
 import vuescale.facade.CreateElement
+import vuescale.facade.RenderFunction
+import vuescale.tags._
 
 /** Helper class to build components in type safe way.
  */
@@ -66,6 +68,17 @@ class Builder[V] private[scaladsl] (
 
   def render[V0](renderFn: js.ThisFunction1[V0, CreateElement, js.Any]): this.type =
     update("render", renderFn)
+
+  def renderTags(toDescriptor: js.Function1[V, VTag]): this.type = {
+    val renderFn: RenderFunction = { (h: CreateElement) =>
+      val nodes: VTag = toDescriptor(proxy.asInstanceOf[V])
+      val impl = nodes.toRenderer
+      impl(h)
+    }
+
+    update("render", renderFn)
+  }
+
 }
 
 object Builder {
