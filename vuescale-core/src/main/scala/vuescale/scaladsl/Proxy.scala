@@ -7,7 +7,7 @@ import scala.scalajs.js
   * Proxy is used to inject any properties of non-native (Scala.js defined)
   * JS classes into plain JS objects.
  */
-abstract class Proxy[A] {
+abstract class Proxy {
   protected[this] def proxy: js.Dictionary[js.Any]
 
   /**
@@ -25,6 +25,7 @@ abstract class Proxy[A] {
       js.typeOf(rawProp) match {
         case "function" =>
           container(member) = rawProp.asInstanceOf[js.Function].bind(container)
+        case _ =>
       }
     }
     proxy(key) = container

@@ -10,5 +10,4 @@ import vuescale.prelude._
 /** Test suite for Scala specific DSL features.
  */
 class ScalaDSLSpec extends FunSpec {
-
 }
