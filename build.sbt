@@ -2,7 +2,7 @@ import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 
 val libV = "0.1.0-SNAPSHOT"
 val scalaV = "2.12.4"
-val vueV = "2.5.13"
+val vueV = "2.5.16"
 
 crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.4")
 
@@ -12,7 +12,7 @@ val commonSettings = Seq(
   scalaVersion := scalaV,
 
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.3",
+    "org.scala-js" %%% "scalajs-dom" % "0.9.5",
     "org.scalatest" %%% "scalatest" % "3.0.1" % "test"
   ),
 
