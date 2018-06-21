@@ -2,7 +2,7 @@
 
 Yet another Vue.js bindings for Scala.js
 
-# The goal
+## The goal
 
 Our objectives are:
 - Provide effectively working set of [Vue.js][vue] API bindings for [Scala.js][scalajs]
@@ -10,7 +10,7 @@ Our objectives are:
 
 But currently most of the things are work in progress.
 
-# Library at a glance
+## Library at a glance
 
 Currently, this snippet from [example sources][example] below is all I can show you.
 
@@ -85,7 +85,35 @@ object Hello {
 }
 ```
 
-[scalajs]:https://www.scala-js.org/
-[vue]:https://vuejs.org/
+## Development
 
+You need [sbt][] and **Scala.js plugin for sbt** to build the project. Follow Scala.js general build instruction [here][scalajs-build-instruction].
+
+### Build tasks
+
+#### To run all the tests
+
+First, you need to run `yarn` or `npm install` to grab `jsdom`.
+
+Then in sbt shell:
+
+```sh
+> core/test
+```
+
+#### To generate example application
+
+In sbt shell:
+
+```sh
+> example/fastOptJS
+```
+
+Then open `./example/target/scala-2.xx/classes/index.html` with your favorite browser.
+
+
+[sbt]:https://www.scala-sbt.org/
+[scalajs]:https://www.scala-js.org/
+[scalajs-build-instruction]:https://www.scala-js.org/doc/project/
+[vue]:https://vuejs.org/
 [example]:https://github.com/lettenj61/vuescale/blob/master/example/src/main/scala/vuescale/example/Hello.scala
