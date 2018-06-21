@@ -23,7 +23,7 @@ class Builder[V] private[scaladsl] (
     inner(key) = value; this
   }
 
-  def result: Component[V] = inner.asInstanceOf[Component[V]]
+  def build: Component[V] = inner.asInstanceOf[Component[V]]
 
   def el(selector: String): this.type =
     update("el", selector)

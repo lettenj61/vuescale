@@ -39,7 +39,7 @@ class RenderSpec extends FunSpec {
               new Task(2, "task2")
             )
           })
-          .result
+          .build
       ).$mount().asInstanceOf[TaskView]
 
       assert(vm.$el.tagName == "UL")

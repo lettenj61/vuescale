@@ -41,7 +41,7 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
               template = "<span>{{a}}</span>"
             )
           )
-          .result
+          .build
       ).$mount()
 
       assert(vm.$el.tagName == "SPAN")
@@ -58,7 +58,7 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
               template = "<tr><td>{{a}}</td></tr>"
             )
           )
-          .result
+          .build
       ).$mount()
 
       assert(vm.$el.innerHTML == "<table><tbody><tr><td>123</td></tr></tbody></table>")
@@ -74,7 +74,7 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
               template = "<tr><td>{{a}}</td></tr>"
             )
           )
-          .result
+          .build
       ).$mount()
 
       assert(vm.$el.innerHTML == "<table><tbody><tr><td>123</td></tr></tbody></table>")
@@ -90,7 +90,7 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
               data = Data("child")
             )
           )
-          .result
+          .build
       ).$mount()
 
       assert(vm.$el.innerHTML == "<span>child</span>")
@@ -115,7 +115,7 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
               data = new TestView("b")
             )
           )
-          .result
+          .build
       ).$mount()
 
       assert(vm.$el.outerHTML == "<div view=\"view-a\">foo a</div>")

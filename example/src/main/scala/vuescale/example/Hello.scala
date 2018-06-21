@@ -26,7 +26,7 @@ object Hello {
   val TodoFooter = Component.builder("todo-footer")
     .template("<p>{{ message }}</p>")
     .data("message" -> "Enter your todos")
-    .result
+    .build
 
   @JSExport
   def main(): Unit = {
