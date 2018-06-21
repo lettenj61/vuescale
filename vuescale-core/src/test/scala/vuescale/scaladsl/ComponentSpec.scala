@@ -23,6 +23,8 @@ class ComponentSpec extends AsyncFunSpec with BeforeAndAfter {
   class Data[A](val a: A) extends js.Object
   def Data[A](arg: A): Data[A] = new Data(arg)
 
+  // FIXME: This never work with async tests on Scala.js
+  // https://stackoverflow.com/questions/46584633/async-before-in-scalatest-for-scalajs
   before {
     Vue.config.silent = true
     Vue.config.productionTip = false
