@@ -9,7 +9,7 @@ import org.scalajs.dom
 import vuescale.facade.Vue
 
 trait WrapperLowPriorityImplicits {
-  sealed trait ElementOrSelector extends js.Any
+  sealed trait ElementOrSelector extends js.Object // TODO: move to outer package as native JS trait
   @inline implicit def StringSelector(selector: String): ElementOrSelector =
     selector.asInstanceOf[ElementOrSelector]
 
@@ -20,27 +20,27 @@ trait WrapperLowPriorityImplicits {
 abstract class BaseComponentWrapper
     extends WrapperLowPriorityImplicits {
 
-  type Data
+  type Data <: js.Object
   type Props
 
   trait ReactiveData extends js.Object {
     def data(): Data
     def props: js.UndefOr[Props] = js.undefined
   }
-  trait InjectedProperties extends js.Object { self: ReactiveData =>
-    def computed: js.UndefOr[ComputedProperty]
-    def methods: js.UndefOr[Methods]
+  trait InjectedProperties extends js.Object {
+    def computed: js.UndefOr[ComputedProperty] = js.undefined
+    def methods: js.UndefOr[Methods] = js.undefined
   }
   trait ComputedProperty extends js.Object
   trait Methods extends js.Object
 
   trait DOMOptions extends js.Object {
-    def el: js.UndefOr[ElementOrSelector]
-    def template: js.UndefOr[String]
+    def el: js.UndefOr[ElementOrSelector] = js.undefined
+    def template: js.UndefOr[String] = js.undefined
   }
 }
 
-class ComponentWrapper
+abstract class ComponentWrapper
     extends BaseComponentWrapper {
 
   trait ComponentOptions
@@ -53,7 +53,7 @@ class ComponentWrapper
     def functional: js.UndefOr[Boolean]
   }
 
-  type ViewModel = Vue with ComponentOptions
+  type ViewModel = Vue with Data with ComponentOptions
   type LifecycleHook = js.ThisFunction0[ViewModel, Unit]
 
   trait LifecycleOptions extends js.Object {
@@ -70,9 +70,9 @@ class ComponentWrapper
   }
 
   // stub
-  @inline protected[this] def vm: ViewModel =
-    ContextualThis.resolve[ViewModel](???)
+  protected[this] sealed trait Self extends js.Object
+  @inline protected[this] def vm(implicit `this`: Self): ViewModel =
+    ContextualThis.resolve[ViewModel](`this`)
 
-  // FIXME: type it
-  def build: js.Object = ???
+  def build: Self => ReactiveData
 }

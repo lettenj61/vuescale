@@ -4,6 +4,7 @@ package scaladsl
 import scala.language.implicitConversions
 import scala.scalajs.js
 
+@js.native
 trait ContextualThis[A] extends js.Function0[A]
 object ContextualThis {
   private[this] final val resolver: ContextualThis[js.Dynamic] =
