@@ -24,7 +24,6 @@ abstract class BaseComponentWrapper
   type Props
   type ViewModel = Vue with Data
 
-  /*
   trait DataOptions extends js.Object {
     def data(): Data
     def props: js.UndefOr[Props] = js.undefined
@@ -33,7 +32,6 @@ abstract class BaseComponentWrapper
   }
   trait ComputedProperty extends js.Object
   trait Methods extends js.Object
-  */
 
   trait DOMOptions extends js.Object {
     def el: js.UndefOr[ElementOrSelector] = js.undefined
@@ -43,17 +41,6 @@ abstract class BaseComponentWrapper
 
 abstract class ComponentWrapper
     extends BaseComponentWrapper {
-
-  trait DataOptions extends js.Object {
-    def data(): Data
-    def props: js.UndefOr[Props] = js.undefined
-    val computed: ComputedProperty
-    val methods: Methods
-  }
-  trait ComputedProperty extends js.Object {
-    @inline implicit def thisArg: ComputedProperty
-  }
-  trait Methods extends js.Object
 
   abstract class ComponentOptions
       extends DataOptions
@@ -79,8 +66,8 @@ abstract class ComponentWrapper
     def destroyed: js.UndefOr[LifecycleHook] = js.undefined
   }
 
-  @inline protected[this] final def vm(implicit self: ComputedProperty): ViewModel =
-    self.asInstanceOf[ViewModel]
+  protected[this] def withContext[A](self: js.Object)(f: ViewModel => A): A =
+    f(ThisContext.resolve(self))
 
   def component: ComponentOptions
 }

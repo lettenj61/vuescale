@@ -13,11 +13,10 @@ object Counter extends ComponentWrapper {
     val name: String = "counter"
     override def data(): Data = new Data(1)
     override val computed: ComputedProperty = new ComputedProperty {
-      implicit def thisArg: ComputedProperty = this
-      def doubled(): Int = {
+      def doubled(): Int = withContext(this)(vm => {
         g.console.log("%o", vm)
         vm.count * 2
-      }
+      })
     }
   }
   def apply(): ViewModel =
