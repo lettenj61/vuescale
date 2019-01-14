@@ -22,17 +22,18 @@ abstract class BaseComponentWrapper
 
   type Data <: js.Object
   type Props
+  type ViewModel = Vue with Data
 
-  trait ReactiveData extends js.Object {
+  /*
+  trait DataOptions extends js.Object {
     def data(): Data
     def props: js.UndefOr[Props] = js.undefined
-  }
-  trait InjectedProperties extends js.Object {
-    def computed: js.UndefOr[ComputedProperty] = js.undefined
-    def methods: js.UndefOr[Methods] = js.undefined
+    val computed: ComputedProperty
+    val methods: Methods
   }
   trait ComputedProperty extends js.Object
   trait Methods extends js.Object
+  */
 
   trait DOMOptions extends js.Object {
     def el: js.UndefOr[ElementOrSelector] = js.undefined
@@ -43,17 +44,26 @@ abstract class BaseComponentWrapper
 abstract class ComponentWrapper
     extends BaseComponentWrapper {
 
-  trait ComponentOptions
-      extends ReactiveData
-        with InjectedProperties
-        with DOMOptions
-        with LifecycleOptions {
-
-    def name: String
-    def functional: js.UndefOr[Boolean]
+  trait DataOptions extends js.Object {
+    def data(): Data
+    def props: js.UndefOr[Props] = js.undefined
+    val computed: ComputedProperty
+    val methods: Methods
   }
+  trait ComputedProperty extends js.Object {
+    @inline implicit def thisArg: ComputedProperty
+  }
+  trait Methods extends js.Object
 
-  type ViewModel = Vue with Data with ComponentOptions
+  abstract class ComponentOptions
+      extends DataOptions
+         with DOMOptions
+         with LifecycleOptions {
+
+    val name: String
+    def functional: js.UndefOr[Boolean] = js.undefined
+    override val methods: Methods = js.undefined.asInstanceOf[Methods]
+  }
   type LifecycleHook = js.ThisFunction0[ViewModel, Unit]
 
   trait LifecycleOptions extends js.Object {
@@ -69,10 +79,8 @@ abstract class ComponentWrapper
     def destroyed: js.UndefOr[LifecycleHook] = js.undefined
   }
 
-  // stub
-  protected[this] sealed trait Self extends js.Object
-  @inline protected[this] def vm(implicit `this`: Self): ViewModel =
-    ContextualThis.resolve[ViewModel](`this`)
+  @inline protected[this] final def vm(implicit self: ComputedProperty): ViewModel =
+    self.asInstanceOf[ViewModel]
 
-  def build: Self => ReactiveData
+  def component: ComponentOptions
 }

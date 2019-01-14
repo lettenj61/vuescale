@@ -5,24 +5,23 @@ import org.scalatest.FunSpec
 import vuescale.facade.Vue
 
 import scala.scalajs.js
-import scala.scalajs.js.UndefOr
+import scala.scalajs.js.Dynamic.{ global => g }
 
 object Counter extends ComponentWrapper {
   class Data(var count: Int) extends js.Object
-  def build = { implicit self =>
-    new ComponentOptions {
-      override def name: String = "counter"
-      override def functional: UndefOr[Boolean] = false
-      override def data(): Data = new Data(0)
-
-      override def computed: UndefOr[Counter.ComputedProperty] = new ComputedProperty {
-        def doubled(): Int = vm.count * 2
+  def component: ComponentOptions = new ComponentOptions {
+    val name: String = "counter"
+    override def data(): Data = new Data(1)
+    override val computed: ComputedProperty = new ComputedProperty {
+      implicit def thisArg: ComputedProperty = this
+      def doubled(): Int = {
+        g.console.log("%o", vm)
+        vm.count * 2
       }
     }
   }
-
   def apply(): ViewModel =
-    build(null.asInstanceOf[Self]).asInstanceOf[ViewModel]
+    component.asInstanceOf[ViewModel]
 }
 
 class ComponentWrapperSpec extends FunSpec {
@@ -30,8 +29,8 @@ class ComponentWrapperSpec extends FunSpec {
     it("generate component options") {
       val vm = new Vue(Counter()).asInstanceOf[Counter.ViewModel]
 
-      assert(vm.count == 0)
-      // assert(vm.doubled)
+      assert(vm.count == 1)
+      assert(vm.asInstanceOf[js.Dynamic].doubled.asInstanceOf[Int] == 2)
     }
   }
 }
