@@ -9,6 +9,9 @@ import scala.scalajs.js.Dynamic.{ global => g }
 
 object Counter extends ComponentWrapper {
   class Data(var count: Int) extends js.Object
+  trait Injected extends js.Object {
+    def doubled: Int
+  }
   def component: ComponentOptions = new ComponentOptions {
     val name: String = "counter"
     override def data(): Data = new Data(1)
@@ -29,7 +32,7 @@ class ComponentWrapperSpec extends FunSpec {
       val vm = new Vue(Counter()).asInstanceOf[Counter.ViewModel]
 
       assert(vm.count == 1)
-      assert(vm.asInstanceOf[js.Dynamic].doubled.asInstanceOf[Int] == 2)
+      assert(vm.doubled == 2)
     }
   }
 }

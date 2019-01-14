@@ -20,9 +20,10 @@ trait WrapperLowPriorityImplicits {
 abstract class BaseComponentWrapper
     extends WrapperLowPriorityImplicits {
 
-  type Data <: js.Object
+  type Data <: js.Any
   type Props
-  type ViewModel = Vue with Data
+  type Injected <: js.Object
+  type ViewModel = Vue with Data with Injected
 
   trait DataOptions extends js.Object {
     def data(): Data
