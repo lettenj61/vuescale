@@ -9,7 +9,6 @@ import org.scalajs.dom.window.console
 
 import vuescale.prelude._
 import vuescale.tags.syntax._
-import vuescale.scaladsl.EventImplicits._
 
 @JSExportAll
 case class Todo(id: Int, name: String, var done: Boolean)

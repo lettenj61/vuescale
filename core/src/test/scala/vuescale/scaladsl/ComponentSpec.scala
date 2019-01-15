@@ -1,4 +1,4 @@
-package vuescale
+package vuescale.scaladsl
 
 import scala.scalajs.js
 import scala.scalajs.js.Thenable.Implicits._

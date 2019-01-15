@@ -1,11 +1,9 @@
-package vuescale
-
-import scala.scalajs.js
-import scala.scalajs.js.annotation._
+package vuescale.scaladsl
 
 import org.scalatest.FunSpec
-
 import vuescale.prelude._
+
+import scala.scalajs.js
 
 class RenderSpec extends FunSpec {
 

@@ -10,7 +10,7 @@ object prelude {
   type Handler[V <: js.Object] = scaladsl.Handler[V]
 
   type Component[V <: Vue] = scaladsl.Component[V]
-  val Component = scaladsl.Component
+  val Component: scaladsl.Component.type = scaladsl.Component
 
   type CreateElement = facade.CreateElement
 

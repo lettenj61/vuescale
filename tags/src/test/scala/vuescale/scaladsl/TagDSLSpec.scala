@@ -1,15 +1,13 @@
-package vuescale
-
-import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
-import scala.scalajs.js.annotation._
+package vuescale.scaladsl
 
 import org.scalajs.dom
 import org.scalajs.dom.window.console
 import org.scalatest.FunSpec
-
 import vuescale.prelude._
 import vuescale.tags.syntax._
+
+import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 
 /** Test suite for Scala specific DSL features.
  */
@@ -35,7 +33,7 @@ class TagDSLSpec extends FunSpec {
 
       val options = Component.builder[Vue with Box]("vtag-test")
         .data(new Box("large"))
-        .renderTags { (vm: Vue with Box) => vtag }
+        .render(vtag.toRenderer)
         .build
       
       try {
