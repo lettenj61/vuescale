@@ -20,17 +20,17 @@ class RenderSpec extends FunSpec {
     it("basic usage") {
       val vm = new Vue(
         Component.builder[TaskView]
-          .render({ (self: TaskList, h: CreateElement) =>
+          .render { (vm, h) =>
             val children = js.Array[VNode]()
-            for (i <- 0 until self.items.length) {
+            for (i <- 0 until vm.items.length) {
               children += h(
                 "li",
                 js.Dictionary("staticClass" -> "task"),
-                js.Array(self.items(i).name)
+                js.Array(vm.items(i).name)
               )
             }
             h("ul", js.Dictionary("staticClass" -> "tasks"), children)
-          })
+          }
           .data(new TaskList {
             val items = js.Array(
               new Task(1, "task1"),

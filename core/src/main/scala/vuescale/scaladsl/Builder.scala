@@ -1,13 +1,11 @@
 package vuescale
 package scaladsl
 
-import scala.language.implicitConversions
-
-import scala.scalajs.js
-
 import org.scalajs.dom
+import vuescale.facade.{ CreateElement, RenderFunction, RenderThisFunction, VNode }
 
-import vuescale.facade.CreateElement
+import scala.language.implicitConversions
+import scala.scalajs.js
 
 /** Helper class to build components in type safe way.
  */
@@ -24,7 +22,7 @@ class Builder[V] private[scaladsl] (
     this
   }
 
-  def build: Component[V] = proxy.asInstanceOf[Component[V]]
+  @inline def build: Component[V] = proxy.asInstanceOf[Component[V]]
 
   def el(selector: String): this.type =
     update("el", selector)
@@ -61,15 +59,12 @@ class Builder[V] private[scaladsl] (
   def name(componentName: String): this.type =
     update("name", componentName)
 
-  def render(renderFn: js.Function1[CreateElement, js.Any]): this.type =
+  def render(renderFn: RenderThisFunction[V]): this.type =
     update("render", renderFn)
 
-  def render[V0](renderFn: js.ThisFunction1[V0, CreateElement, js.Any]): this.type =
+  def render(renderFn: RenderFunction): this.type =
     update("render", renderFn)
 
-}
-
-object Builder {
-  implicit def dictionaryIsObject(dict: js.Dictionary[_]): js.Object =
-    dict.asInstanceOf[js.Object]
+  def render(renderFn: (V, CreateElement) => VNode): this.type =
+    update("render", renderFn: RenderThisFunction[V])
 }

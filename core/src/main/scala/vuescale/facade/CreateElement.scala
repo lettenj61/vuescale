@@ -7,13 +7,9 @@ import scala.scalajs.js
 trait CreateElement extends js.Object {
 
   def apply(): VNode
-
   def apply(tag: String): VNode
-
   def apply(tag: js.Object): VNode
-
   def apply(tag: String, vnodeChildren: String): VNode
-
   def apply(tag: String, vnodeChildren: js.Array[_]): VNode
 
   def apply(

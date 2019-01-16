@@ -20,19 +20,21 @@ trait WrapperLowPriorityImplicits {
 abstract class BaseComponentWrapper
     extends WrapperLowPriorityImplicits {
 
-  type Data <: js.Any
-  type Props
-  type Injected <: js.Object
+  type Data <: js.Object
+  // type Props
+  type Computed <: js.Object
+  type Methods <: js.Object
+  type Injected = Computed with Methods
   type ViewModel = Vue with Data with Injected
+
+  // TODO: Integrate these inner classes with non-native option objects used in Builder API
 
   trait DataOptions extends js.Object {
     def data(): Data
-    def props: js.UndefOr[Props] = js.undefined
-    val computed: ComputedProperty
+    def props: js.UndefOr[js.Object] = js.undefined // FIXME
+    val computed: Computed
     val methods: Methods
   }
-  trait ComputedProperty extends js.Object
-  trait Methods extends js.Object
 
   trait DOMOptions extends js.Object {
     def el: js.UndefOr[ElementOrSelector] = js.undefined
@@ -51,6 +53,7 @@ abstract class ComponentWrapper
     val name: String
     def functional: js.UndefOr[Boolean] = js.undefined
     override val methods: Methods = js.undefined.asInstanceOf[Methods]
+    override val computed: Computed = js.undefined.asInstanceOf[Computed]
   }
   type LifecycleHook = js.ThisFunction0[ViewModel, Unit]
 

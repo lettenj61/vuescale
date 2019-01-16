@@ -9,12 +9,18 @@ import org.scalajs.dom.window.console
 
 import vuescale.prelude._
 import vuescale.tags.syntax._
+import vuescale.tags.syntax.prefixed._
 
 @JSExportAll
 case class Todo(id: Int, name: String, var done: Boolean)
 
 @JSExportTopLevel("vuescale.example.Hello")
 object Hello {
+
+  implicit class RichEvent(val event: dom.Event) extends AnyVal {
+    @inline final def inputTarget: dom.html.Input =
+      event.target.asInstanceOf[dom.html.Input]
+  }
 
   class TodoList extends js.Object {
     var title = "Hello, Vue.js"
@@ -35,12 +41,12 @@ object Hello {
 
   val TodoMain = Component.builder[TodoListView]("todo-main")
     .data(new TodoList)
-    .renderTags { (vm: TodoListView) =>
+    .renderTags { vm =>
       <.div(
         <.h3(vm.title),
         <.input(
           ^.typeName := "text",
-          ^.onKeyUp := { (e: dom.KeyboardEvent) =>
+          ^.onKeyUp := { e: dom.KeyboardEvent =>
             if (e.keyCode == KeyCode.Enter) {
               vm.todos.push(Todo(
                 vm.todos.length,
@@ -48,16 +54,24 @@ object Hello {
                 false
               ))
               vm.input = ""
-              e.target.asInstanceOf[dom.html.Input].value = ""
+              e.inputTarget.value = ""
             }
           },
-          ^.onInput := { (e: dom.Event) =>
+          ^.onInput := { e: dom.Event =>
             console.log("%o", vm)
             console.log("%o", e)
-            vm.input = e.inputValue
+            vm.input = e.inputTarget.value
           }
         ),
-        <.div((vm.todos.map(todo => <.li(todo.name)): _*))
+        <.div(for (todo <- vm.todos) yield {
+          <.li(
+            ^.onDblClick := (() => todo.done = !todo.done),
+            ^.classMap := ClassMap(
+              "done" -> todo.done
+            ),
+            todo.name
+          )
+        })
       )
     }
     .build
@@ -70,23 +84,5 @@ object Hello {
     ))
 
     console.log("%o", vm.$options)
-  //   val vm: Vue = new Vue(Component(
-  //     el = "#app",
-  //     data = new TodoList,
-  //     methods = new Handler[TodoListView] {
-  //       val addTodo: Callback = { vm =>
-  //         vm.todos.push(Todo(
-  //           vm.todos.length,
-  //           vm.input,
-  //           false
-  //         ))
-  //         vm.input = ""
-  //       }
-  //       def checkTodo(todo: Todo): Unit = {
-  //         todo.done = !todo.done
-  //       }
-  //     },
-  //     components = Seq("todo-footer" -> TodoFooter)
-  //   ))
   }
 }

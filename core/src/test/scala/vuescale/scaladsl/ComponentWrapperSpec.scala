@@ -9,15 +9,15 @@ import scala.scalajs.js.Dynamic.{ global => g }
 
 object Counter extends ComponentWrapper {
   class Data(var count: Int) extends js.Object
-  trait Injected extends js.Object {
+  trait Computed extends js.Object {
     def doubled: Int
   }
   def component: ComponentOptions = new ComponentOptions {
     val name: String = "counter"
     override def data(): Data = new Data(1)
-    override val computed: ComputedProperty = new ComputedProperty {
+    override val computed: Computed = new Computed {
       def doubled(): Int = withContext(this)(vm => {
-        g.console.log("%o", vm)
+        // g.console.log("%o", vm)
         vm.count * 2
       })
     }

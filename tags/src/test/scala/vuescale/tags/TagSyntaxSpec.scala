@@ -1,17 +1,19 @@
-package vuescale.scaladsl
+package vuescale.tags
 
 import org.scalajs.dom
 import org.scalajs.dom.window.console
 import org.scalatest.FunSpec
 import vuescale.prelude._
+import vuescale.scaladsl.Component
 import vuescale.tags.syntax._
+import vuescale.tags.syntax.prefixed._
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
 /** Test suite for Scala specific DSL features.
  */
-class TagDSLSpec extends FunSpec {
+class TagSyntaxSpec extends FunSpec {
   describe("Tags DSL") {
     it ("constructs a tree") {
       val nodes = <.div(^.id := "one")
@@ -25,7 +27,8 @@ class TagDSLSpec extends FunSpec {
       val vtag =
         <.div(^.name := "test", ^.hidden)(
           <.button(
-            ^.onClick := { (e: dom.MouseEvent) => console.log("%o", e) }
+            ^.onClick := { e: dom.MouseEvent => console.log("%o", e) },
+            "press me!"
           )
         )
 
@@ -33,12 +36,12 @@ class TagDSLSpec extends FunSpec {
 
       val options = Component.builder[Vue with Box]("vtag-test")
         .data(new Box("large"))
-        .render(vtag.toRenderer)
+        .render(vtag)
         .build
       
       try {
         val vm = new Vue(options).$mount()
-        console.log(vm.$el.outerHTML)
+        assert(vm.$el.outerHTML == "<div name=\"test\" hidden=\"hidden\"><button>press me!</button></div>")
         vm.$emit("click")
       } catch {
         case e: Exception => throw e

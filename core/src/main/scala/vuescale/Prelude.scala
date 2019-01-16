@@ -15,4 +15,6 @@ object prelude {
   type CreateElement = facade.CreateElement
 
   type VNode = facade.VNode
+
+  type ComponentWrapper = scaladsl.ComponentWrapper
 }

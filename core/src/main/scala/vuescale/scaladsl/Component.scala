@@ -1,11 +1,10 @@
 package vuescale
 package scaladsl
 
+import vuescale.facade.{ RenderFunction, Vue }
+
 import scala.scalajs.js
 import scala.scalajs.js.annotation._
-
-import vuescale.facade.CreateElement
-import vuescale.facade.Vue
 
 trait DataOptions[V] extends js.Object {
   def data: js.UndefOr[js.Function0[js.Object]] = js.undefined
@@ -21,7 +20,7 @@ trait DomOptions extends js.Object {
   def el: js.UndefOr[String] = js.undefined
   def template: js.UndefOr[String] = js.undefined
   // TODO more strong type
-  def render: js.UndefOr[CreateElement] = js.undefined
+  def render: js.UndefOr[RenderFunction] = js.undefined
   def renderError: js.UndefOr[js.Function] = js.undefined
 }
 
