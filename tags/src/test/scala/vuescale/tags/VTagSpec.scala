@@ -34,6 +34,18 @@ class VTagSpec extends FunSpec {
         <.input(^.typeName := "text", ^.contenteditable),
         "<input type=\"text\" contenteditable=\"true\">"
       )
+
+      // zipped attributes and elements are corrected
+      checkComponent(
+        <.div(
+          "Misc",
+          ^.className := "fee foo fum",
+          <.ul(
+            <.li("child")
+          )
+        ),
+        "<div class=\"fee foo fum\">Misc<ul><li>child</li></ul></div>"
+      )
     }
   }
 
