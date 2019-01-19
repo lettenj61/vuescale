@@ -7,6 +7,7 @@ import scala.scalajs.js
 import org.scalajs.dom
 
 import vuescale.facade.Vue
+import vuescale.scaladsl.Observed.ObservedOps
 
 trait WrapperLowPriorityImplicits {
   sealed trait ElementOrSelector extends js.Object // TODO: move to outer package as native JS trait
@@ -24,8 +25,7 @@ abstract class BaseComponentWrapper
   // type Props
   type Computed <: js.Object
   type Methods <: js.Object
-  type Injected = Computed with Methods
-  type ViewModel = Vue with Data with Injected
+  type ViewModel = Vue with Data with Computed with Methods
 
   // TODO: Integrate these inner classes with non-native option objects used in Builder API
 
@@ -70,8 +70,15 @@ abstract class ComponentWrapper
     def destroyed: js.UndefOr[LifecycleHook] = js.undefined
   }
 
-  protected[this] def withContext[A](self: js.Object)(f: ViewModel => A): A =
-    f(ThisContext.resolve(self))
+  @inline protected[this] implicit def observeComputed(
+    observed: Computed
+  ): ObservedOps[Computed, ViewModel] =
+    new ObservedOps[Computed, ViewModel](observed)
+
+  @inline protected[this] implicit def observeMethods(
+    observed: Methods
+  ): ObservedOps[Methods, ViewModel] =
+    new ObservedOps[Methods, ViewModel](observed)
 
   def component: ComponentOptions
 }

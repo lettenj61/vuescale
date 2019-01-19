@@ -5,7 +5,7 @@ import org.scalatest.FunSpec
 import vuescale.facade.Vue
 
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{ global => g }
+// import scala.scalajs.js.Dynamic.{ global => g }
 
 object Counter extends ComponentWrapper {
   class Data(var count: Int) extends js.Object
@@ -16,10 +16,7 @@ object Counter extends ComponentWrapper {
     val name: String = "counter"
     override def data(): Data = new Data(1)
     override val computed: Computed = new Computed {
-      def doubled(): Int = withContext(this)(vm => {
-        // g.console.log("%o", vm)
-        vm.count * 2
-      })
+      def doubled(): Int = this.asVue.count * 2
     }
   }
   def apply(): ViewModel =

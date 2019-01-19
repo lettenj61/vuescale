@@ -31,7 +31,8 @@ val commonSettings = Seq(
 val domSettings = Seq(
   jsEnv in Test := new JSDOMNodeJSEnv,
   jsDependencies ++= Seq(
-    "org.webjars.npm" % "vue" % vueV / "dist/vue.js" % "test"
+    // use minified, compiler+runtime build for tests
+    "org.webjars.npm" % "vue" % vueV / "dist/vue.min.js" % "test"
   )
 )
 
