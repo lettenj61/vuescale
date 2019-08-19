@@ -6,6 +6,6 @@
   "author": "lettenj61 <lettenj61@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
-    "jsdom": "^11.2.0"
+    "jsdom": "^15.1.1"
   }
 }
