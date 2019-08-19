@@ -14,8 +14,8 @@ import vuescale.tags.syntax.prefixed._
 @JSExportAll
 case class Todo(id: Int, name: String, var done: Boolean)
 
-@JSExportTopLevel("vuescale.example.Hello")
-object Hello {
+@JSExportTopLevel("HelloVuescale")
+object HelloVuescale {
 
   implicit class RichEvent(val event: dom.Event) extends AnyVal {
     @inline final def inputTarget: dom.html.Input =
@@ -43,22 +43,26 @@ object Hello {
     .data(new TodoList)
     .renderTags { vm =>
       <.div(
-        <.h3(vm.title),
-        <.input(
-          ^.typeName := "text",
-          ^.onKeyUp := { e: dom.KeyboardEvent =>
-            if (e.keyCode == KeyCode.Enter) {
-              vm.todos.push(Todo(
-                vm.todos.length,
-                vm.input,
-                false
-              ))
-              vm.input = ""
-              e.inputTarget.value = ""
-            } else {
-              vm.input = e.inputTarget.value
-            }
-          },
+        <.h3(^.className := "title", vm.title),
+        <.p(
+          ^.className := "control",
+          <.input(
+            ^.className := "input",
+            ^.typeName := "text",
+            ^.onKeyUp := { e: dom.KeyboardEvent =>
+              if (e.keyCode == KeyCode.Enter) {
+                vm.todos.push(Todo(
+                  vm.todos.length,
+                  vm.input,
+                  false
+                ))
+                vm.input = ""
+                e.inputTarget.value = ""
+              } else {
+                vm.input = e.inputTarget.value
+              }
+            },
+          )
         ),
         <.ul(for (todo <- vm.todos) yield {
           <.li(
